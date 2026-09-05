@@ -1,0 +1,2080 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>יומן חיים</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*{box-sizing:border-box;min-width:0}
+:root{
+  --bg:#f5f4f0;--surface:#ffffff;--surface2:#f0ede8;--surface3:#e8e4de;
+  --border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.12);
+  --text1:#1a1714;--text2:#4a4540;--text3:#9a958e;
+  --accent:#6c5ce7;--accent2:#4a7cf7;--green:#27a060;--red:#e03e3e;--amber:#d4820a;
+  --radius:14px;--radius-sm:10px;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Heebo',sans-serif;background:var(--bg);color:var(--text1);min-height:100vh;direction:rtl;font-size:14px;overflow-x:hidden;box-sizing:border-box}*,*::before,*::after{box-sizing:border-box}
+.app{display:flex;flex-direction:column;height:100dvh;max-width:430px;margin:0 auto;overflow:hidden;background:var(--surface)}
+
+/* HEADER */
+.header{padding:14px 16px 10px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;box-shadow:0 1px 8px rgba(0,0,0,0.06)}
+.header-title{font-size:18px;font-weight:700;color:var(--accent)}
+.header-date{font-size:11px;color:var(--text3);margin-top:1px}
+.streak-badge{display:flex;align-items:center;gap:4px;background:rgba(212,130,10,0.1);border:1px solid rgba(212,130,10,0.2);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--amber)}
+
+/* TABS */
+.tabs{display:flex;background:var(--surface);border-bottom:1px solid var(--border);flex-shrink:0;overflow-x:auto;scrollbar-width:none;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:1;min-width:52px;padding:9px 2px 7px;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;border-bottom:2px solid transparent;color:var(--text3);transition:all 0.2s;font-size:10px;font-weight:500}
+.tab i{font-size:20px}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:12px 14px 80px;display:flex;flex-direction:column;gap:10px;scrollbar-width:none;width:100%;max-width:100%;min-height:0}
+.content::-webkit-scrollbar{display:none}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:0 2px 8px rgba(0,0,0,0.05);width:100%;overflow:hidden}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.card-title{font-size:13px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:6px}
+.card-title i{font-size:15px;color:var(--accent)}
+
+/* METRIC GRID */
+.metric-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+.metric-row.three{grid-template-columns:repeat(3,1fr)}
+.metric{background:var(--surface2);border-radius:var(--radius-sm);padding:12px 8px;text-align:center;border:1px solid var(--border)}
+.metric-val{font-size:22px;font-weight:700;line-height:1}
+.metric-label{font-size:10px;color:var(--text3);margin-top:3px}
+.metric-val.green{color:var(--green)}
+.metric-val.red{color:var(--red)}
+.metric-val.amber{color:var(--amber)}
+
+/* INPUTS */
+.field-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.field-label{font-size:12px;color:var(--text2);min-width:72px;flex-shrink:0}
+input[type=number],input[type=text],input[type=time],select,textarea{
+  background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);
+  padding:9px 12px;color:var(--text1);font-size:13px;font-family:inherit;width:100%;max-width:100%;
+  direction:rtl;-webkit-appearance:none;box-sizing:border-box
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent)}
+textarea{resize:none;min-height:64px;line-height:1.5}
+
+/* BUTTONS */
+.btn{padding:10px 16px;border-radius:var(--radius-sm);border:none;font-size:13px;font-family:inherit;cursor:pointer;font-weight:600;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-primary{background:var(--accent);color:#fff;width:100%}
+.btn-secondary{background:var(--surface2);color:var(--text2);border:0.5px solid var(--border2)}
+.btn-green{background:rgba(52,199,123,0.15);color:var(--green);border:0.5px solid rgba(52,199,123,0.3);width:100%;margin-top:6px}
+
+/* PROGRESS BAR */
+.prog-wrap{height:5px;background:var(--surface3);border-radius:3px;overflow:hidden;margin-top:6px}
+.prog-fill{height:100%;border-radius:3px;transition:width 0.4s}
+
+/* WEEK STRIP */
+.week-strip{display:flex;gap:4px;justify-content:space-between;margin-bottom:4px}
+.wd{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.wd-lbl{font-size:10px;color:var(--text3)}
+.wd-dot{width:32px;height:32px;border-radius:9px;background:var(--surface2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--text2);transition:all 0.15s}
+.wd-dot.done{background:rgba(52,199,123,0.2);border-color:var(--green);color:var(--green)}
+.wd-dot.partial{background:rgba(245,166,35,0.15);border-color:var(--amber);color:var(--amber)}
+.wd-dot.today{border-color:var(--accent);color:var(--accent)}
+.wd-dot.selected{box-shadow:0 0 0 2px var(--accent)}
+
+/* HABITS */
+.habit-item{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.habit-item:last-child{border-bottom:none}
+.h-check{width:24px;height:24px;border-radius:7px;border:1.5px solid var(--border2);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s}
+.h-check.done{background:var(--accent);border-color:var(--accent);color:#fff}
+.h-emoji{font-size:16px;width:24px;text-align:center}
+.h-name{font-size:13px;flex:1;color:var(--text1)}
+
+/* SLEEP QUALITY */
+.sq-row{display:flex;gap:4px;margin-top:8px;width:100%}
+.sq-btn{flex:1;min-width:0;padding:7px 1px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text3);font-size:10px;cursor:pointer;text-align:center;transition:all 0.15s;overflow:hidden}
+.sq-btn.active{border-color:var(--accent);background:rgba(124,106,247,0.15);color:var(--accent)}
+
+/* WORKOUT */
+.workout-type-row{display:flex;gap:6px;margin-bottom:10px}
+.wt-btn{flex:1;padding:9px 4px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text2);font-size:11px;cursor:pointer;text-align:center;font-weight:600;transition:all 0.15s}
+.wt-btn.active{border-color:var(--accent);background:rgba(124,106,247,0.15);color:var(--accent)}
+
+/* MEAL CARD */
+.meal-card{background:var(--surface2);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;border:1px solid var(--border)}
+.meal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.meal-name{font-size:13px;font-weight:600}
+.meal-kcal{font-size:12px;color:var(--amber)}
+.meal-macros{display:flex;gap:8px;font-size:11px;color:var(--text3)}
+.meal-macro span{color:var(--text2);font-weight:600}
+.meal-delete{color:var(--red);font-size:14px;cursor:pointer;padding:2px 6px}
+
+/* AI */
+.ai-btn{width:100%;padding:11px 14px;background:rgba(108,92,231,0.08);border:1px solid rgba(108,92,231,0.2);border-radius:var(--radius-sm);color:var(--accent);font-size:13px;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:8px;margin-bottom:7px;font-weight:500;transition:all 0.15s}
+.ai-btn:hover{background:rgba(124,106,247,0.2)}
+.ai-btn i{font-size:16px}
+.ai-result{background:rgba(108,92,231,0.05);border-radius:var(--radius-sm);padding:14px;font-size:13px;color:var(--text1);line-height:1.8;margin-top:8px;white-space:pre-wrap;display:none;border:1px solid rgba(108,92,231,0.15)}
+.ai-thinking{display:flex;gap:4px;align-items:center;font-size:12px;color:var(--text3);padding:8px 0}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 1.2s ease-in-out infinite}
+.ai-dot:nth-child(2){animation-delay:0.2s}
+.ai-dot:nth-child(3){animation-delay:0.4s}
+@keyframes pulse{0%,80%,100%{opacity:0.3}40%{opacity:1}}
+
+/* GOALS */
+.goal-item{background:var(--surface2);border-radius:var(--radius-sm);padding:12px;margin-bottom:8px;border:1px solid var(--border)}
+.goal-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.goal-name{font-size:13px;font-weight:500}
+.goal-pct{font-size:14px;font-weight:700}
+.goal-nums{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:6px}
+.goal-num{background:var(--surface3);border-radius:6px;padding:5px;text-align:center;font-size:11px;color:var(--text3)}
+.goal-num b{display:block;font-size:13px;color:var(--text2);font-weight:600}
+
+/* SECTION LABEL */
+.section-lbl{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.8px;margin:10px 0 6px}
+
+/* PHOTO UPLOAD */
+.photo-area{border:2px dashed var(--border2);border-radius:var(--radius-sm);padding:20px;text-align:center;cursor:pointer;color:var(--text3);font-size:13px;transition:all 0.2s;background:var(--surface2)}
+.photo-area:hover{border-color:var(--accent);color:var(--accent)}
+.photo-preview{width:100%;border-radius:var(--radius-sm);margin-top:8px;display:none}
+
+/* WATER QUICK */
+.water-row{display:flex;gap:6px;margin-top:6px}
+.w-chip{padding:6px 10px;border:0.5px solid var(--border2);border-radius:20px;background:var(--surface2);color:var(--text2);font-size:12px;cursor:pointer;transition:all 0.15s}
+.w-chip:active{background:rgba(91,139,247,0.2);border-color:var(--accent2);color:var(--accent2)}
+
+/* CHART */
+.chart-wrap{position:relative;height:160px;margin-top:10px}
+
+/* STATS MINI */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat-card{background:var(--surface2);border-radius:var(--radius-sm);padding:14px;text-align:center;border:1px solid var(--border)}
+.stat-val{font-size:26px;font-weight:700}
+.stat-lbl{font-size:10px;color:var(--text3);margin-top:2px}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;display:flex;align-items:flex-end;animation:fadeIn 0.2s}
+.modal{background:var(--surface);border-radius:20px 20px 0 0;padding:20px 16px 40px;width:100%;max-height:90dvh;overflow-y:auto;-webkit-overflow-scrolling:touch;box-shadow:0 -4px 30px rgba(0,0,0,0.12)}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{color:var(--text3);font-size:20px;cursor:pointer;padding:4px}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.cal-view-btn{flex:1;padding:8px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface2);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s}
+.cal-view-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.cal-day{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;position:relative}
+.cal-day.done{background:rgba(39,160,96,0.2);color:var(--green)}
+.cal-day.partial{background:rgba(212,130,10,0.15);color:var(--amber)}
+.cal-day.empty{background:var(--surface2);color:var(--text3)}
+.cal-day.today{box-shadow:0 0 0 2px var(--accent)}
+.cal-day.future{opacity:0.3;cursor:default}
+.mini-month{background:var(--surface2);border-radius:10px;padding:8px}
+.mini-month-title{font-size:11px;font-weight:700;color:var(--text2);margin-bottom:6px;text-align:center}
+.mini-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.mini-day{aspect-ratio:1;border-radius:3px;font-size:8px;display:flex;align-items:center;justify-content:center;font-weight:600}
+.mini-day.done{background:var(--green);color:#fff}
+.mini-day.partial{background:var(--amber);color:#fff}
+.mini-day.empty{background:var(--surface3);color:var(--text3)}
+.mini-day.today{box-shadow:0 0 0 1.5px var(--accent)}
+.week-day-row{display:grid;grid-template-columns:40px 1fr;gap:8px;padding:8px 0;border-bottom:1px solid var(--border)}
+.week-day-label{font-size:12px;font-weight:700;color:var(--text2);text-align:center;padding-top:2px}
+.week-day-data{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.week-chip{padding:3px 8px;border-radius:20px;font-size:11px;font-weight:500}
+.streak-dot{width:10px;height:10px;border-radius:3px}
+/* TOAST */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--text1);color:var(--surface);border-radius:20px;padding:9px 18px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,0.15)}
+.toast.show{opacity:1}
+
+/* ADD MEAL FORM */
+.add-meal-form{background:var(--surface2);border-radius:var(--radius-sm);padding:12px;margin-top:8px;border:0.5px solid var(--border2)}
+
+/* ── RESPONSIVE: Desktop ─────────────────────────────── */
+@media (min-width:700px){
+  body{background:#e8e5df;display:flex;align-items:stretch;justify-content:center}
+
+  .app{
+    width:100%;
+    max-width:100%;
+    height:100vh;
+    flex-direction:column;
+    overflow:hidden;
+    margin-right:120px;
+  }
+
+  /* סרגל לשוניות — עמודה שמאלית */
+  .tabs{
+    flex-direction:column;
+    width:120px;
+    min-width:120px;
+    max-width:120px;
+    height:100vh;
+    border-bottom:none;
+    border-left:1px solid var(--border);
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding:12px 0;
+    flex-shrink:0;
+    position:fixed;
+    right:0;
+    top:0;
+    z-index:10;
+    background:var(--surface);
+    box-shadow:-2px 0 8px rgba(0,0,0,0.06);
+  }
+  .tab{
+    flex:none;
+    width:100%;
+    padding:14px 6px;
+    border-bottom:none;
+    border-right:3px solid transparent;
+    font-size:11px;
+    flex-direction:column;
+    gap:5px;
+    white-space:normal;
+    text-align:center;
+  }
+  .tab.active{
+    border-right:3px solid var(--accent);
+    border-bottom:none;
+    background:rgba(108,92,231,0.08);
+    color:var(--accent);
+  }
+  .tab i{font-size:22px}
+
+  /* אזור ראשי */
+  .main-area{
+    display:flex;
+    flex-direction:column;
+    flex:1;
+    overflow:hidden;
+    min-width:0;
+  }
+
+  .header{padding:16px 24px 14px;flex-shrink:0}
+  .header-title{font-size:22px}
+
+  #dailySummaryBar{
+    padding:14px 24px;
+    flex-shrink:0;
+  }
+
+  .content{
+    padding:16px 24px 24px;
+    gap:16px;
+    overflow-y:auto;
+  }
+
+  .card{border-radius:16px;padding:18px}
+  .metric-val{font-size:22px}
+  .card-title{font-size:15px}
+
+  /* Week strip wider */
+  .week-strip{gap:8px}
+  .week-day{width:44px;height:52px;font-size:13px}
+}
+
+@media (min-width:1100px){
+  .tabs{width:140px;min-width:140px;max-width:140px}
+  .tab{font-size:12px;padding:16px 8px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div>
+      <div class="header-title">יומן חיים</div>
+      <div class="header-date" id="headerDate"></div>
+    </div>
+    <div id="streakBadge" class="streak-badge" style="display:none"></div>
+  </div>
+
+<!-- Daily summary — always visible above tabs -->
+<div id="dailySummaryBar" style="background:linear-gradient(135deg,#f8f6ff 0%,#eef2ff 100%);border-bottom:1px solid rgba(108,92,231,0.12);padding:12px 16px;flex-shrink:0">
+  <div style="display:flex;align-items:center;gap:14px">
+
+    <!-- Ring — שמאל -->
+    <div style="flex-shrink:0;position:relative;width:64px;height:64px">
+      <svg width="64" height="64" viewBox="0 0 64 64">
+        <circle cx="32" cy="32" r="26" fill="none" stroke="rgba(108,92,231,0.12)" stroke-width="7"/>
+        <circle cx="32" cy="32" r="26" fill="none" stroke="var(--accent)" stroke-width="7"
+          stroke-dasharray="163.4" stroke-dashoffset="163.4"
+          stroke-linecap="round" transform="rotate(-90 32 32)"
+          id="ringCircle" style="transition:stroke-dashoffset 0.6s ease"/>
+      </svg>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;width:100%">
+        <div style="font-size:14px;font-weight:800;color:var(--accent);line-height:1" id="ringPct">0%</div>
+        <div style="font-size:8px;color:var(--text3);margin-top:1px">הושלם</div>
+      </div>
+    </div>
+
+    <!-- נתונים — ימין -->
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13px;font-weight:700;color:var(--accent);margin-bottom:7px" id="todayDayLabel">היום</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px 8px;min-width:0">
+        <div style="display:flex;align-items:center;gap:5px">
+          <span style="font-size:10px;color:var(--text3);white-space:nowrap">✅ הרגלים</span>
+          <span style="font-size:12px;font-weight:700;color:var(--accent)" id="t-habitCount">0/0</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px">
+          <span style="font-size:10px;color:var(--text3);white-space:nowrap">😴 שינה</span>
+          <span style="font-size:12px;font-weight:700;color:var(--text1)" id="t-sleepHrs">—</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px">
+          <span style="font-size:10px;color:var(--text3);white-space:nowrap">💧 מים</span>
+          <span style="font-size:12px;font-weight:700;color:var(--accent2)" id="t-water">—</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:5px">
+          <span style="font-size:10px;color:var(--text3);white-space:nowrap">👟 צעדים</span>
+          <span style="font-size:12px;font-weight:700;color:var(--green)" id="t-steps">—</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="tabs">
+    <div class="tab active" onclick="switchTab('today',this)"><i class="ti ti-sun"></i>היום</div>
+    <div class="tab" onclick="switchTab('sleep',this)"><i class="ti ti-moon-stars"></i>שינה</div>
+    <div class="tab" onclick="switchTab('workout',this)"><i class="ti ti-barbell"></i>כושר</div>
+    <div class="tab" onclick="switchTab('nutrition',this)"><i class="ti ti-salad"></i>תזונה</div>
+    <div class="tab" onclick="switchTab('habits',this)"><i class="ti ti-checks"></i>הרגלים</div>
+    <div class="tab" onclick="switchTab('books',this)"><i class="ti ti-book"></i>ספרים</div>
+    <div class="tab" onclick="switchTab('growth',this)"><i class="ti ti-plant"></i>צמיחה</div>
+    <div class="tab" onclick="switchTab('calendar',this)"><i class="ti ti-calendar"></i>יומן</div>
+    <div class="tab" onclick="switchTab('ai',this)"><i class="ti ti-brain"></i>AI</div>
+    <div class="tab" onclick="switchTab('settings',this)"><i class="ti ti-settings"></i>הגדרות</div>
+  </div>
+
+<div class="main-area"><!-- MAIN AREA -->
+  <!-- TODAY -->
+  <div id="tab-today" class="content">
+
+    <!-- Week strip with nav -->
+    <div style="display:flex;align-items:center;gap:4px;flex-shrink:0">
+      <button onclick="shiftTodayWeek(-1)" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:15px;color:var(--text2)">‹</button>
+      <div class="week-strip" id="weekStrip" style="flex:1"></div>
+      <button onclick="shiftTodayWeek(1)" id="todayWeekNext" style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer;font-size:15px;color:var(--text2)">›</button>
+    </div>
+
+
+
+    <!-- Sleep input card -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-moon"></i> שינה</div>
+        <span id="sleepBadge" style="font-size:11px;color:var(--text3)"></span>
+      </div>
+      <div class="metric-row three">
+        <div class="metric"><div class="metric-val" id="t-sleepScore">—</div><div class="metric-label">ציון גרמין</div></div>
+        <div class="metric"><div class="metric-val" id="t-sleepQuality">—</div><div class="metric-label">איכות</div></div>
+        <div class="metric"><div class="metric-val" id="t-workoutBadge" style="font-size:13px">—</div><div class="metric-label">אימון</div></div>
+      </div>
+      <div class="field-row"><div class="field-label">שכיבה</div><input type="time" id="bedtime" onchange="saveDay('bedtime',this.value);calcSleep()"></div>
+      <div class="field-row"><div class="field-label">קימה</div><input type="time" id="waketime" onchange="saveDay('waketime',this.value);calcSleep()"></div>
+      <div class="field-row"><div class="field-label">ציון גרמין</div><input type="number" id="garminScore" min="0" max="100" placeholder="0-100" onchange="saveDay('garminScore',this.value);refreshToday()"></div>
+      <div class="sq-row">
+        <div class="sq-btn" onclick="setSQ(1,this)">😫</div>
+        <div class="sq-btn" onclick="setSQ(2,this)">😴</div>
+        <div class="sq-btn" onclick="setSQ(3,this)">😐</div>
+        <div class="sq-btn" onclick="setSQ(4,this)">😊</div>
+        <div class="sq-btn" onclick="setSQ(5,this)">🌟</div>
+      </div>
+    </div>
+
+    <!-- Workout Summary -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-barbell"></i> כושר היום</div>
+        <span id="t-workoutBadge" style="font-size:11px;color:var(--green)"></span>
+      </div>
+      <div class="metric-row">
+        <div class="metric"><div class="metric-val green" id="t-workoutDur">—</div><div class="metric-label">דקות אימון</div></div>
+        <div class="metric"><div class="metric-val" id="t-workoutKcal">—</div><div class="metric-label">קק"ל שרפתי</div></div>
+      </div>
+      <div class="metric-row">
+        <div class="metric"><div class="metric-val" id="t-steps">—</div><div class="metric-label">צעדים</div></div>
+        <div class="metric"><div class="metric-val" id="t-water">—</div><div class="metric-label">מים (ל')</div></div>
+      </div>
+      <div class="field-row"><div class="field-label">צעדים</div><input type="number" id="steps" placeholder="8000" onchange="saveDay('steps',this.value);refreshToday()"></div>
+      <div class="field-row"><div class="field-label">מים (ל')</div><input type="number" id="water" step="0.25" placeholder="2.5" onchange="saveDay('water',this.value);refreshToday()"></div>
+      <div class="water-row">
+        <div class="w-chip" onclick="addWater(0.25)">+250מ"ל</div>
+        <div class="w-chip" onclick="addWater(0.5)">+500מ"ל</div>
+        <div class="w-chip" onclick="addWater(1)">+1ל'</div>
+      </div>
+    </div>
+
+    <!-- Nutrition Summary -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-salad"></i> תזונה היום</div>
+        <span id="t-mealCount" style="font-size:11px;color:var(--text3)"></span>
+      </div>
+      <div class="metric-row">
+        <div class="metric"><div class="metric-val amber" id="t-kcalTotal">—</div><div class="metric-label">קק"ל סה"כ</div></div>
+        <div class="metric"><div class="metric-val" id="t-balance">—</div><div class="metric-label">מאזן</div></div>
+      </div>
+      <div class="metric-row three">
+        <div class="metric"><div class="metric-val" id="t-protein">—</div><div class="metric-label">חלבון ג'</div></div>
+        <div class="metric"><div class="metric-val" id="t-carbs">—</div><div class="metric-label">פחמימות ג'</div></div>
+        <div class="metric"><div class="metric-val" id="t-fat">—</div><div class="metric-label">שומן ג'</div></div>
+      </div>
+      <div class="prog-wrap"><div class="prog-fill" id="kcalBar" style="background:var(--amber);width:0%"></div></div>
+    </div>
+
+    <!-- Habits Summary -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-checks"></i> הרגלים</div>
+        <span id="t-habitCount" style="font-size:12px;font-weight:700;color:var(--accent)"></span>
+      </div>
+      <div class="prog-wrap" style="height:8px"><div class="prog-fill" id="habitBar" style="background:var(--accent);width:0%"></div></div>
+    </div>
+
+    <!-- Bodyweight -->
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-scale"></i> שקילה יומית</div></div>
+      <div class="field-row"><div class="field-label">משקל (ק"ג)</div><input type="number" id="weight" step="0.1" placeholder="82.5" onchange="saveDay('weight',this.value)"></div>
+    </div>
+  </div>
+
+  <!-- SLEEP TAB -->
+  <div id="tab-sleep" class="content" style="display:none">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-moon-stars"></i> מעקב שינה</div></div>
+      <div class="field-row"><div class="field-label">שכיבה</div><input type="time" id="sl-bedtime" onchange="saveDay('bedtime',this.value);syncSleepFields()"></div>
+      <div class="field-row"><div class="field-label">קימה</div><input type="time" id="sl-waketime" onchange="saveDay('waketime',this.value);syncSleepFields()"></div>
+      <div class="metric-row" style="margin-top:10px">
+        <div class="metric"><div class="metric-val" id="sl-hrs">—</div><div class="metric-label">שעות שינה</div></div>
+        <div class="metric"><div class="metric-val" id="sl-eff">—</div><div class="metric-label">בוצע אוטומטית</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-device-watch"></i> ציון גרמין</div></div>
+      <div class="field-row">
+        <div class="field-label">ציון (0-100)</div>
+        <input type="number" id="sl-garmin" min="0" max="100" placeholder="85" onchange="saveDay('garminScore',this.value);syncSleepFields();updateGarminBadge(this.value)">
+      </div>
+      <!-- Garmin badges — one row -->
+      <div style="display:flex;gap:4px;margin-top:12px;overflow:hidden">
+        <div class="garmin-badge" id="gb-great" style="flex:1;min-width:0;padding:7px 2px;border-radius:8px;text-align:center;border:1.5px solid var(--border);background:var(--surface2);transition:all 0.2s;cursor:default">
+          <div style="font-size:20px">🌟</div><div style="font-size:9px;font-weight:600;margin-top:2px;color:var(--text2)">מצוין</div><div style="font-size:8px;color:var(--text3)">90-100</div>
+        </div>
+        <div class="garmin-badge" id="gb-good" style="flex:1;min-width:0;padding:7px 2px;border-radius:8px;text-align:center;border:1.5px solid var(--border);background:var(--surface2);transition:all 0.2s;cursor:default">
+          <div style="font-size:20px">😊</div><div style="font-size:9px;font-weight:600;margin-top:2px;color:var(--text2)">טוב</div><div style="font-size:8px;color:var(--text3)">80-89</div>
+        </div>
+        <div class="garmin-badge" id="gb-ok" style="flex:1;min-width:0;padding:7px 2px;border-radius:8px;text-align:center;border:1.5px solid var(--border);background:var(--surface2);transition:all 0.2s;cursor:default">
+          <div style="font-size:20px">😐</div><div style="font-size:9px;font-weight:600;margin-top:2px;color:var(--text2)">סביר</div><div style="font-size:8px;color:var(--text3)">70-79</div>
+        </div>
+        <div class="garmin-badge" id="gb-weak" style="flex:1;min-width:0;padding:7px 2px;border-radius:8px;text-align:center;border:1.5px solid var(--border);background:var(--surface2);transition:all 0.2s;cursor:default">
+          <div style="font-size:20px">😴</div><div style="font-size:9px;font-weight:600;margin-top:2px;color:var(--text2)">חלש</div><div style="font-size:8px;color:var(--text3)">60-69</div>
+        </div>
+        <div class="garmin-badge" id="gb-bad" style="flex:1;min-width:0;padding:7px 2px;border-radius:8px;text-align:center;border:1.5px solid var(--border);background:var(--surface2);transition:all 0.2s;cursor:default">
+          <div style="font-size:20px">😫</div><div style="font-size:9px;font-weight:600;margin-top:2px;color:var(--text2)">גרוע</div><div style="font-size:8px;color:var(--text3)">0-59</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-notes"></i> הערות שינה</div></div>
+      <textarea id="sleepNotes" placeholder="הערות על השינה הלילה..." onchange="saveDay('sleepNotes',this.value)" rows="3"></textarea>
+    </div>
+  </div>
+
+  <!-- WORKOUT -->
+  <div id="tab-workout" class="content" style="display:none">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-barbell"></i> סוג אימון</div></div>
+      <div class="workout-type-row">
+        <div class="wt-btn" onclick="setWorkoutType('run',this)">🏃 ריצה</div>
+        <div class="wt-btn" onclick="setWorkoutType('strength',this)">💪 כוח</div>
+        <div class="wt-btn" onclick="setWorkoutType('bike',this)">🚴 רכיבה</div>
+        <div class="wt-btn" onclick="setWorkoutType('swim',this)">🏊 שחייה</div>
+        <div class="wt-btn" onclick="setWorkoutType('other',this)">⚡ אחר</div>
+      </div>
+      <div id="otherTypeField" style="display:none;margin-bottom:8px">
+        <input type="text" id="workoutTypeOther" placeholder="סוג אימון אחר..." onchange="saveDay('workoutTypeOther',this.value)">
+      </div>
+      <div class="field-row"><div class="field-label">משך (דקות)</div><input type="number" id="workoutDur" placeholder="45" onchange="saveDay('workoutDur',this.value);refreshToday()"></div>
+      <div class="field-row"><div class="field-label">מרחק (ק"מ)</div><input type="number" id="workoutDist" step="0.1" placeholder="5.0" onchange="saveDay('workoutDist',this.value)"></div>
+      <div class="field-row"><div class="field-label">דופק ממוצע</div><input type="number" id="workoutHR" placeholder="145" onchange="saveDay('workoutHR',this.value)"></div>
+      <div class="field-row"><div class="field-label">קק"ל שרפתי</div><input type="number" id="workoutKcal" placeholder="400" onchange="saveDay('workoutKcal',this.value);refreshToday()"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-footprint"></i> צעדים יומיים</div></div>
+      <div class="field-row"><div class="field-label">מספר צעדים</div><input type="number" id="stepsW" placeholder="8000" onchange="saveDay('steps',this.value);syncStepsField();refreshToday()"></div>
+      <div id="stepsProgress">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:6px">
+          <span id="stepsPct"></span>
+          <span id="stepsGoalLabel"></span>
+        </div>
+        <div class="prog-wrap"><div class="prog-fill" id="stepsBar" style="background:var(--green);width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-notes"></i> פירוט</div></div>
+      <textarea id="workoutNotes" placeholder="פירוט האימון, תרגילים, סטים, הערות..." onchange="saveDay('workoutNotes',this.value)" rows="4"></textarea>
+    </div>
+
+    <div class="metric-row" id="workoutSummaryCards" style="display:none">
+      <div class="metric"><div class="metric-val green" id="ws-dur">0</div><div class="metric-label">דקות</div></div>
+      <div class="metric"><div class="metric-val amber" id="ws-kcal">0</div><div class="metric-label">קק"ל שרפתי</div></div>
+    </div>
+  </div>
+
+  <!-- NUTRITION -->
+  <div id="tab-nutrition" class="content" style="display:none">
+
+    <!-- Meals list -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-salad"></i> ארוחות היום</div>
+        <div style="font-size:11px;color:var(--text3)" id="mealsKcalTotal"></div>
+      </div>
+      <div id="mealsList"></div>
+      <button class="btn btn-green" onclick="showAddMeal()"><i class="ti ti-plus"></i> הוסף ארוחה</button>
+    </div>
+
+    <!-- Add meal form (hidden by default) -->
+    <div class="card" id="addMealCard" style="display:none">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-plus"></i> ארוחה חדשה</div>
+        <span onclick="hideAddMeal()" style="color:var(--text3);cursor:pointer;font-size:18px">✕</span>
+      </div>
+
+      <!-- Photo upload -->
+      <div class="section-lbl">📸 צלם ארוחה לניתוח AI</div>
+      <div style="position:relative">
+        <label for="mealPhoto" style="display:flex;align-items:center;gap:10px;background:var(--surface2);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:12px 14px;cursor:pointer">
+          <i class="ti ti-camera" style="font-size:22px;color:var(--accent);flex-shrink:0"></i>
+          <div>
+            <div style="font-size:13px;font-weight:600;color:var(--text1)">צלם ארוחה</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">ניתוח קלוריות אוטומטי ע"י AI</div>
+          </div>
+          <input type="file" id="mealPhoto" accept="image/*" capture="environment" style="display:none" onchange="handleMealPhoto(event)">
+        </label>
+        <div id="photoAnalyzing" style="display:none;align-items:center;gap:6px;padding:8px 0;font-size:12px;color:var(--text3)" class="ai-thinking">
+          <div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div>
+          <span>מנתח תמונה...</span>
+        </div>
+        <img id="mealPhotoPreview" class="photo-preview">
+      </div>
+
+      <div class="section-lbl" style="margin-top:10px">✏️ פרטי הארוחה</div>
+      <div class="field-row"><div class="field-label">שם הארוחה</div><input type="text" id="mealName" placeholder="ארוחת בוקר, צהריים..."></div>
+      <div class="metric-row">
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">קק"ל</div><input type="number" id="mealKcal" placeholder="500"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">חלבון (ג')</div><input type="number" id="mealProtein" placeholder="30"></div>
+      </div>
+      <div class="metric-row">
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">פחמימות (ג')</div><input type="number" id="mealCarbs" placeholder="60"></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">שומן (ג')</div><input type="number" id="mealFat" placeholder="15"></div>
+      </div>
+      <div class="field-row" style="margin-top:4px"><div class="field-label">הערות</div><input type="text" id="mealNotes" placeholder="הערות על הארוחה..."></div>
+      <button class="btn btn-primary" style="margin-top:10px" onclick="addMeal()"><i class="ti ti-check"></i> שמור ארוחה</button>
+    </div>
+
+    <!-- Daily totals -->
+    <div class="card" id="nutritionTotalsCard" style="display:none">
+      <div class="card-header"><div class="card-title"><i class="ti ti-chart-bar"></i> סיכום יומי</div></div>
+      <div class="metric-row">
+        <div class="metric"><div class="metric-val amber" id="n-kcal">0</div><div class="metric-label">קק"ל</div></div>
+        <div class="metric"><div class="metric-val" id="n-balance">—</div><div class="metric-label">מאזן</div></div>
+      </div>
+      <div class="metric-row three">
+        <div class="metric"><div class="metric-val green" id="n-protein">0</div><div class="metric-label">חלבון ג'</div></div>
+        <div class="metric"><div class="metric-val" id="n-carbs">0</div><div class="metric-label">פחמימות ג'</div></div>
+        <div class="metric"><div class="metric-val" id="n-fat">0</div><div class="metric-label">שומן ג'</div></div>
+      </div>
+      <div style="margin-top:8px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:4px">
+          <span>עמידה ביעד קלוריות</span>
+          <span id="n-kcalPct"></span>
+        </div>
+        <div class="prog-wrap" style="height:8px"><div class="prog-fill" id="n-kcalBar" style="background:var(--amber);width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HABITS -->
+  <div id="tab-habits" class="content" style="display:none">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-sun-rise"></i> נוהל בוקר</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span id="h-morning-count" style="font-size:11px;color:var(--text3)"></span>
+          <span onclick="showAddHabit('morning')" style="color:var(--accent);cursor:pointer;font-size:13px;font-weight:700">+ הוסף</span>
+        </div>
+      </div>
+      <div id="h-morning" style="max-height:300px;overflow-y:auto"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-sun"></i> מהלך היום</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span id="h-day-count" style="font-size:11px;color:var(--text3)"></span>
+          <span onclick="showAddHabit('day')" style="color:var(--accent);cursor:pointer;font-size:13px;font-weight:700">+ הוסף</span>
+        </div>
+      </div>
+      <div id="h-day" style="max-height:300px;overflow-y:auto"></div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-moon"></i> פרוטוקול שינה</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <span id="h-sleep-count" style="font-size:11px;color:var(--text3)"></span>
+          <span onclick="showAddHabit('sleep')" style="color:var(--accent);cursor:pointer;font-size:13px;font-weight:700">+ הוסף</span>
+        </div>
+      </div>
+      <div id="h-sleep" style="max-height:300px;overflow-y:auto"></div>
+    </div>
+  </div>
+
+  <!-- BOOKS -->
+  <div id="tab-books" class="content" style="display:none">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-book"></i> הספרים שלי</div>
+        <span onclick="showBookModal()" style="color:var(--accent);cursor:pointer;font-size:13px;font-weight:600">+ הוסף</span>
+      </div>
+      <div id="booksList" style="max-height:70vh;overflow-y:auto"></div>
+    </div>
+  </div>
+
+  <!-- GROWTH -->
+  <div id="tab-growth" class="content" style="display:none">
+    <!-- Prayer -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-hand-stop"></i> תפילת ההודיה שלי</div>
+        <span id="prayerEditBtn" onclick="togglePrayerEdit()" style="font-size:12px;color:var(--accent);cursor:pointer">✏️ ערוך</span>
+      </div>
+      <div id="prayerDisplay" style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap;max-height:220px;overflow-y:auto;padding:4px 2px;scrollbar-width:thin"></div>
+      <div id="prayerEditArea" style="display:none;margin-top:8px">
+        <textarea id="prayerEditText" style="width:100%;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:10px;color:var(--text1);font-size:13px;font-family:inherit;resize:none;min-height:200px;direction:rtl;line-height:1.7"></textarea>
+        <button class="btn btn-primary" style="margin-top:8px" onclick="savePrayerEdit()"><i class="ti ti-check"></i> שמור תפילה</button>
+      </div>
+    </div>
+
+    <!-- Goals Text -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-target"></i> המטרות שלי 2026</div>
+        <span onclick="toggleGoalsEdit()" style="font-size:12px;color:var(--accent);cursor:pointer">✏️ ערוך</span>
+      </div>
+      <div id="goalsTextDisplay" style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap;max-height:280px;overflow-y:auto;padding:4px 2px;scrollbar-width:thin"></div>
+      <div id="goalsEditArea" style="display:none;margin-top:8px">
+        <textarea id="goalsEditText" style="width:100%;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:10px;color:var(--text1);font-size:13px;font-family:inherit;resize:none;min-height:300px;direction:rtl;line-height:1.7"></textarea>
+        <button class="btn btn-primary" style="margin-top:8px" onclick="saveGoalsEdit()"><i class="ti ti-check"></i> שמור מטרות</button>
+      </div>
+    </div>
+
+    <!-- Numeric Goals -->
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-chart-bar"></i> יעדים עם מעקב</div></div>
+      <div id="goalsList"></div>
+      <button class="btn btn-secondary" style="margin-top:8px;width:100%" onclick="showGoalModal()"><i class="ti ti-plus"></i> הוסף יעד עם מדד</button>
+    </div>
+
+    <!-- Daily Summary -->
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-writing"></i> סיכום היום</div></div>
+      <div class="section-lbl">🙏 הכרת תודה</div>
+      <textarea id="gratitude" placeholder="מה טוב קרה היום..." onchange="saveDay('gratitude',this.value)" rows="2"></textarea>
+      <div class="section-lbl">💡 מה למדתי</div>
+      <textarea id="learned" placeholder="תובנה חשובה..." onchange="saveDay('learned',this.value)" rows="2"></textarea>
+      <div class="section-lbl">🏆 מה השגתי</div>
+      <textarea id="achieved" placeholder="הישג של היום..." onchange="saveDay('achieved',this.value)" rows="2"></textarea>
+      <div class="section-lbl">💭 הרהורים</div>
+      <textarea id="thoughts" placeholder="מחשבות חופשיות..." onchange="saveDay('thoughts',this.value)" rows="3"></textarea>
+    </div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div id="tab-calendar" class="content" style="display:none">
+
+    <!-- View toggle -->
+    <div style="display:flex;gap:6px;margin-bottom:2px">
+      <button class="cal-view-btn active" id="cvb-year" onclick="setCalView('year',this)">שנתי</button>
+      <button class="cal-view-btn" id="cvb-month" onclick="setCalView('month',this)">חודשי</button>
+      <button class="cal-view-btn" id="cvb-week" onclick="setCalView('week',this)">שבועי</button>
+    </div>
+
+    <!-- Year view -->
+    <div id="cal-year" class="card" style="padding:12px">
+      <div class="card-header" style="margin-bottom:10px">
+        <div class="card-title"><i class="ti ti-calendar"></i> <span id="cal-year-title">2026</span></div>
+        <div style="display:flex;gap:6px">
+          <button onclick="shiftYear(-1)" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:14px">‹</button>
+          <button onclick="shiftYear(1)" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:14px">›</button>
+        </div>
+      </div>
+      <div id="yearGrid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px"></div>
+    </div>
+
+    <!-- Month view -->
+    <div id="cal-month" class="card" style="display:none;padding:12px">
+      <div class="card-header" style="margin-bottom:10px">
+        <div class="card-title"><i class="ti ti-calendar-month"></i> <span id="cal-month-title"></span></div>
+        <div style="display:flex;gap:6px">
+          <button onclick="shiftMonth(-1)" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:14px">‹</button>
+          <button onclick="shiftMonth(1)" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:14px">›</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;text-align:center">
+        <div style="font-size:10px;color:var(--text3)">א</div><div style="font-size:10px;color:var(--text3)">ב</div><div style="font-size:10px;color:var(--text3)">ג</div><div style="font-size:10px;color:var(--text3)">ד</div><div style="font-size:10px;color:var(--text3)">ה</div><div style="font-size:10px;color:var(--text3)">ו</div><div style="font-size:10px;color:var(--text3)">ש</div>
+      </div>
+      <div id="monthGrid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px"></div>
+    </div>
+
+    <!-- Week view -->
+    <div id="cal-week" class="card" style="display:none;padding:12px">
+      <div class="card-header" style="margin-bottom:10px">
+        <div class="card-title"><i class="ti ti-calendar-week"></i> <span id="cal-week-title"></span></div>
+        <div style="display:flex;gap:6px">
+          <button onclick="shiftWeekCal(-1)" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:14px">‹</button>
+          <button onclick="shiftWeekCal(1)" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px;cursor:pointer;font-size:14px">›</button>
+        </div>
+      </div>
+      <div id="weekCalGrid"></div>
+    </div>
+
+    <!-- Streak card -->
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-flame"></i> רצף הרגלים</div></div>
+      <div style="display:flex;align-items:center;gap:16px;padding:6px 0">
+        <div style="text-align:center">
+          <div style="font-size:42px;font-weight:800;color:var(--amber)" id="streakCount">0</div>
+          <div style="font-size:11px;color:var(--text3)">ימים ברצף</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:8px" id="streakMsg"></div>
+          <div id="streakDots" style="display:flex;flex-wrap:wrap;gap:3px"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Day detail panel -->
+    <div id="dayDetailCard" class="card" style="display:none">
+      <div class="card-header">
+        <div class="card-title"><i class="ti ti-calendar-event"></i> <span id="dayDetailTitle"></span></div>
+        <span onclick="document.getElementById('dayDetailCard').style.display='none'" style="cursor:pointer;color:var(--text3);font-size:18px">✕</span>
+      </div>
+      <div id="dayDetailContent"></div>
+    </div>
+  </div>
+
+  <!-- AI + TRENDS -->
+  <div id="tab-ai" class="content" style="display:none">
+    <!-- Week stats -->
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-calendar-week"></i> סטטיסטיקות שבועיות</div></div>
+      <div class="stat-grid" id="weekStats"></div>
+    </div>
+
+    <!-- AI Buttons -->
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-brain"></i> ניתוח AI</div></div>
+      <button class="ai-btn" onclick="analyzeAI('week')"><i class="ti ti-sparkles"></i> סיכום וניתוח השבוע שלי</button>
+      <button class="ai-btn" onclick="analyzeAI('sleep')"><i class="ti ti-moon"></i> ניתוח דפוסי שינה</button>
+      <button class="ai-btn" onclick="analyzeAI('nutrition')"><i class="ti ti-salad"></i> ניתוח תזונה ומאכולברת</button>
+      <button class="ai-btn" onclick="analyzeAI('habits')"><i class="ti ti-checks"></i> ניתוח עמידה בהרגלים</button>
+      <button class="ai-btn" onclick="analyzeAI('fitness')"><i class="ti ti-barbell"></i> ניתוח כושר ופעילות</button>
+      <div id="aiResult" class="ai-result"></div>
+    </div>
+
+    <!-- Free question -->
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-message"></i> שאלה חופשית</div></div>
+      <textarea id="aiQ" placeholder="שאל כל שאלה על הנתונים שלך..." rows="3"></textarea>
+      <button class="btn btn-primary" style="margin-top:8px" onclick="askFreeAI()"><i class="ti ti-send"></i> שלח</button>
+    </div>
+
+    <!-- Trends chart -->
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-chart-line"></i> מגמת משקל (7 ימים)</div></div>
+      <div class="chart-wrap"><canvas id="weightChart" role="img" aria-label="גרף מגמת משקל"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-footprint"></i> צעדים יומיים (7 ימים)</div></div>
+      <div class="chart-wrap"><canvas id="stepsChart" role="img" aria-label="גרף צעדים יומיים"></canvas></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS -->
+  <div id="tab-settings" class="content" style="display:none">
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-target"></i> יעדים יומיים</div></div>
+      <div class="field-row"><div class="field-label">קלוריות</div><input type="number" id="s-goalKcal" placeholder="2000" onchange="saveSetting('goalKcal',this.value)"></div>
+      <div class="field-row"><div class="field-label">מים (ל')</div><input type="number" id="s-goalWater" step="0.25" placeholder="2.5" onchange="saveSetting('goalWater',this.value)"></div>
+      <div class="field-row"><div class="field-label">צעדים</div><input type="number" id="s-goalSteps" placeholder="8000" onchange="saveSetting('goalSteps',this.value)"></div>
+      <div class="field-row"><div class="field-label">חלבון (ג')</div><input type="number" id="s-goalProtein" placeholder="120" onchange="saveSetting('goalProtein',this.value)"></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-hand-stop"></i> תפילה ומטרות</div></div>
+      <div style="font-size:11px;color:var(--text3);margin-bottom:4px">ערוך ישירות בלשונית צמיחה 🌱</div>
+      <div style="font-size:12px;color:var(--text2);padding:8px;background:var(--surface2);border-radius:var(--radius-sm)">לחץ על <b>✏️ ערוך</b> ליד התפילה או המטרות</div>
+    </div>
+    <div class="card">
+      <div class="card-header"><div class="card-title"><i class="ti ti-download"></i> גיבוי ושחזור</div></div>
+      <button class="btn btn-secondary" style="width:100%;margin-bottom:8px" onclick="exportData()"><i class="ti ti-download"></i> הורד קובץ גיבוי</button>
+      <label class="btn btn-secondary" style="width:100%;cursor:pointer">
+        <i class="ti ti-upload"></i> שחזר מקובץ
+        <input type="file" accept=".json" style="display:none" onchange="importData(event)">
+      </label>
+    </div>
+  </div>
+
+</div><!-- /main-area -->
+</div><!-- /app -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- ADD/EDIT BOOK MODAL -->
+<div class="modal-overlay" id="bookModal" style="display:none" onclick="if(event.target===this)closeBookModal()">
+  <div class="modal">
+    <div class="modal-title">
+      <span id="bookModalTitle">ספר חדש</span>
+      <span class="modal-close" onclick="closeBookModal()">✕</span>
+    </div>
+    <div class="field-row"><div class="field-label">שם הספר</div><input type="text" id="bk-name" placeholder="שם הספר..."></div>
+    <div class="field-row"><div class="field-label">מחבר</div><input type="text" id="bk-author" placeholder="שם המחבר..."></div>
+    <div class="field-row"><div class="field-label">סה"כ עמודים</div><input type="number" id="bk-total" placeholder="300"></div>
+    <div class="field-row"><div class="field-label">עמודים קראתי</div><input type="number" id="bk-read" placeholder="0"></div>
+    <div class="field-row"><div class="field-label">תאריך התחלה</div><input type="date" id="bk-date"></div>
+    <div class="field-row">
+      <div class="field-label">סטטוס</div>
+      <select id="bk-status">
+        <option value="reading">📖 קורא כרגע</option>
+        <option value="done">✅ סיימתי</option>
+        <option value="queue">⏳ ברשימת המתנה</option>
+      </select>
+    </div>
+    <div class="field-row"><div class="field-label">הערות</div><input type="text" id="bk-notes" placeholder="הערות, תובנות..."></div>
+    <input type="hidden" id="bk-editIdx" value="-1">
+    <button class="btn btn-primary" style="margin-top:10px" onclick="saveBook()"><i class="ti ti-check"></i> שמור ספר</button>
+  </div>
+</div>
+
+<!-- ADD HABIT MODAL -->
+<div class="modal-overlay" id="addHabitModal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal">
+    <div class="modal-title"><span id="addHabitModalTitle">הוסף הרגל</span> <span class="modal-close" onclick="document.getElementById('addHabitModal').style.display='none'">✕</span></div>
+    <div class="field-row"><div class="field-label">שם</div><input type="text" id="newHabitName" placeholder="שם ההרגל"></div>
+    <div class="field-row"><div class="field-label">אמוג'י</div><input type="text" id="newHabitEmoji" placeholder="🌟" style="width:70px"></div>
+    <div class="field-row"><div class="field-label">קבוצה</div>
+      <select id="newHabitGroup">
+        <option value="morning">🌅 נוהל בוקר</option>
+        <option value="day">☀️ מהלך היום</option>
+        <option value="sleep">🌙 פרוטוקול שינה</option>
+      </select>
+    </div>
+    <input type="hidden" id="habitEditIdx" value="-1">
+    <button class="btn btn-primary" style="margin-top:10px" onclick="addHabit()"><i class="ti ti-check"></i> שמור</button>
+  </div>
+</div>
+
+<!-- ADD GOAL MODAL -->
+<div class="modal-overlay" id="addGoalModal" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal">
+    <div class="modal-title">הוסף מטרה <span class="modal-close" onclick="document.getElementById('addGoalModal').style.display='none'">✕</span></div>
+    <div class="field-row"><div class="field-label">שם המטרה</div><input type="text" id="newGoalName" placeholder="שם המטרה"></div>
+    <div class="field-row"><div class="field-label">מדד</div><input type="text" id="newGoalUnit" placeholder="ספרים / ימים / ₪"></div>
+    <div class="metric-row">
+      <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">יעד</div><input type="number" id="newGoalTarget" placeholder="12"></div>
+      <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px">בפועל</div><input type="number" id="newGoalActual" placeholder="0"></div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:10px" onclick="addGoal()"><i class="ti ti-check"></i> הוסף</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+const DB='lt_db_v1', ST='lt_settings_v1', HB='lt_habits_v1', GL='lt_goals_v1';
+const getDB=()=>{try{return JSON.parse(localStorage.getItem(DB)||'{}')}catch{return{}}};
+const saveDB=d=>localStorage.setItem(DB,JSON.stringify(d));
+const getST=()=>{try{return JSON.parse(localStorage.getItem(ST)||'{}')}catch{return{}}};
+const saveSetting=(k,v)=>{const s=getST();s[k]=v;localStorage.setItem(ST,JSON.stringify(s))};
+const getHabits=()=>{try{return JSON.parse(localStorage.getItem(HB)||'null')||DEFAULT_HABITS}catch{return DEFAULT_HABITS}};
+const getGoals=()=>{try{return JSON.parse(localStorage.getItem(GL)||'[]')}catch{return[]}};
+const saveGoals=g=>localStorage.setItem(GL,JSON.stringify(g));
+
+const todayKey=()=>new Date().toISOString().slice(0,10);
+let _viewingDate=todayKey();
+
+function getDayData(key=_viewingDate){const db=getDB();return db[key]||{};}
+function saveDay(field,val,key=todayKey()){
+  const db=getDB();
+  if(!db[key])db[key]={};
+  db[key][field]=val;
+  saveDB(db);
+}
+
+// ─── DEFAULT DATA ─────────────────────────────────────────────────────────────
+const DEFAULT_HABITS=[
+  {id:1,name:'מודה אני',emoji:'🙏',group:'morning'},
+  {id:2,name:'תפילת שחרית',emoji:'📖',group:'morning'},
+  {id:3,name:'פעילות גופנית',emoji:'🏃',group:'morning'},
+  {id:4,name:'מדיטציה',emoji:'🧘',group:'morning'},
+  {id:5,name:'ארוחת בוקר בריאה',emoji:'🥗',group:'morning'},
+  {id:6,name:'שתיית מים',emoji:'💧',group:'day'},
+  {id:7,name:'קריאה',emoji:'📚',group:'day'},
+  {id:8,name:'אנרגיה חיובית',emoji:'⚡',group:'day'},
+  {id:9,name:'ללא מסכים שעה לפני שינה',emoji:'📵',group:'sleep'},
+  {id:10,name:'מתיחות',emoji:'🧘',group:'sleep'},
+  {id:11,name:'שינה עד 23:00',emoji:'🌙',group:'sleep'},
+];
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+const TABS=['today','sleep','workout','nutrition','habits','books','growth','calendar','ai','settings'];
+function switchTab(name,el){
+  // fix: if user clicked the <i> icon inside the tab, get the parent .tab
+  while(el && !el.classList.contains('tab')) el=el.parentElement;
+  if(!el) return;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  TABS.forEach(t=>{
+    const tabEl=document.getElementById('tab-'+t);
+    if(tabEl)tabEl.style.display=t===name?'flex':'none';
+  });
+  if(name==='today')refreshToday();
+  if(name==='sleep')loadSleepTab();
+  if(name==='habits')renderHabits();
+  if(name==='books')renderBooks();
+  if(name==='growth')refreshGrowth();
+  if(name==='calendar')renderCalendar();
+  if(name==='ai')refreshAI();
+  if(name==='nutrition')renderMeals();
+  if(name==='settings')loadSettings();
+  if(name==='workout')loadWorkout();
+}
+
+// ─── WEEK STRIP ───────────────────────────────────────────────────────────────
+function buildWeekStrip(){
+  const strip=document.getElementById('weekStrip');
+  if(!strip)return;
+  const SHORT=['א','ב','ג','ד','ה','ו','ש'];
+  const today=new Date();const dow=today.getDay();
+  const db=getDB();const habits=getHabits();
+  strip.innerHTML='';
+  for(let i=0;i<=6;i++){
+    const d=new Date(today);d.setDate(today.getDate()-dow+i);
+    const key=d.toISOString().slice(0,10);
+    const isToday=i===dow;const isFuture=d>today&&!isToday;
+    const dd=db[key]||{};
+    const done=Object.values(dd.habits||{}).filter(Boolean).length;
+    const total=habits.length;
+    let cls=isFuture?'':(done===total&&total>0?'done':done>0?'partial':'');
+    if(isToday)cls+=' today';
+    if(key===_viewingDate)cls+=' selected';
+    const wd=document.createElement('div');
+    wd.className='wd';
+    wd.innerHTML=`<span class="wd-lbl">${SHORT[d.getDay()]}</span><div class="wd-dot ${cls}">${d.getDate()}</div>`;
+    if(!isFuture)wd.onclick=()=>{_viewingDate=key;buildWeekStrip();loadDay(key);};
+    strip.appendChild(wd);
+  }
+}
+
+function loadDay(key){
+  const dd=getDayData(key);
+  const today=todayKey();
+  if(dd.bedtime)document.getElementById('bedtime').value=dd.bedtime;
+  if(dd.waketime)document.getElementById('waketime').value=dd.waketime;
+  if(dd.garminScore)document.getElementById('garminScore').value=dd.garminScore;
+  if(dd.steps)document.getElementById('steps').value=dd.steps;
+  if(dd.water)document.getElementById('water').value=dd.water;
+  if(dd.weight)document.getElementById('weight').value=dd.weight;
+  if(dd.sleepQuality){
+    document.querySelectorAll('.sq-btn').forEach((b,i)=>b.classList.toggle('active',i===dd.sleepQuality-1));
+  }
+  refreshToday();
+}
+
+// ─── TODAY ────────────────────────────────────────────────────────────────────
+function shiftTodayWeek(d){
+  if(d===1&&_viewingDate>=todayKey())return;
+  const cur=new Date(_viewingDate+'T12:00');
+  cur.setDate(cur.getDate()+d*7);
+  const newKey=cur.toISOString().slice(0,10);
+  if(newKey>todayKey())return;
+  _viewingDate=newKey;
+  buildWeekStrip();
+  loadDay(_viewingDate);
+  // update next btn opacity
+  const btn=document.getElementById('todayWeekNext');
+  if(btn)btn.style.opacity=_viewingDate>=todayKey()?'0.3':'1';
+}
+
+function updateRing(pct){
+  const circle=document.getElementById('ringCircle');
+  const pctEl=document.getElementById('ringPct');
+  if(!circle||!pctEl)return;
+  const circumference=163.4;
+  const offset=circumference-(pct/100*circumference);
+  circle.style.strokeDashoffset=offset;
+  pctEl.textContent=Math.round(pct)+'%';
+  circle.style.stroke=pct>=80?'var(--green)':pct>=40?'var(--accent)':'var(--amber)';
+}
+
+function updateDayLabel(){
+  const el=document.getElementById('todayDayLabel');
+  if(!el)return;
+  const today=todayKey();
+  const DAYS=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  if(_viewingDate===today){
+    const now=new Date();
+    el.textContent='היום, '+DAYS[now.getDay()];
+  } else {
+    const d=new Date(_viewingDate+'T12:00');
+    el.textContent=d.toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long'});
+  }
+}
+
+function refreshToday(){
+  const dd=getDayData();const s=getST();
+  updateDayLabel();
+  // Sleep
+  if(dd.sleepDuration)document.getElementById('t-sleepHrs').textContent=dd.sleepDuration;
+  if(dd.garminScore){
+    const sc=parseInt(dd.garminScore);
+    const el=document.getElementById('t-sleepScore');
+    el.textContent=sc;
+    el.className='metric-val '+(sc>=80?'green':sc>=60?'amber':'red');
+  }
+  const qEmoji=['','😫','😴','😐','😊','🌟'];
+  if(dd.sleepQuality)document.getElementById('t-sleepQuality').textContent=qEmoji[dd.sleepQuality]||'—';
+
+  // Workout
+  if(dd.workoutDur){
+    document.getElementById('t-workoutDur').textContent=dd.workoutDur;
+    document.getElementById('t-workoutBadge').textContent='✓ אומן';
+  }
+  if(dd.workoutKcal)document.getElementById('t-workoutKcal').textContent=dd.workoutKcal;
+
+  // Steps
+  if(dd.steps){
+    const stps=parseInt(dd.steps);
+    document.getElementById('t-steps').textContent=stps>=1000?(stps/1000).toFixed(1)+'K':stps;
+  }
+
+  // Water
+  if(dd.water){
+    const w=parseFloat(dd.water);
+    const goal=parseFloat(s.goalWater||2.5);
+    document.getElementById('t-water').textContent=w+'ל\'';
+  }
+
+  // Nutrition from meals
+  const meals=dd.meals||[];
+  const totKcal=meals.reduce((a,m)=>a+(parseInt(m.kcal)||0),0);
+  const totProt=meals.reduce((a,m)=>a+(parseInt(m.protein)||0),0);
+  const totCarbs=meals.reduce((a,m)=>a+(parseInt(m.carbs)||0),0);
+  const totFat=meals.reduce((a,m)=>a+(parseInt(m.fat)||0),0);
+  const workoutKcal=parseInt(dd.workoutKcal||0);
+  const goalKcal=parseInt(s.goalKcal||2000);
+  const balance=totKcal-workoutKcal;
+
+  document.getElementById('t-kcalTotal').textContent=totKcal||'—';
+  document.getElementById('t-mealCount').textContent=meals.length?meals.length+' ארוחות':'';
+  if(totKcal){
+    const balEl=document.getElementById('t-balance');
+    balEl.textContent=(balance>0?'+':'')+balance;
+    balEl.className='metric-val '+(balance>goalKcal*0.1?'red':balance<-200?'amber':'green');
+    document.getElementById('t-protein').textContent=totProt;
+    document.getElementById('t-carbs').textContent=totCarbs;
+    document.getElementById('t-fat').textContent=totFat;
+    const pct=Math.min(100,Math.round(totKcal/goalKcal*100));
+    document.getElementById('kcalBar').style.width=pct+'%';
+    document.getElementById('kcalBar').style.background=pct>110?'var(--red)':pct>90?'var(--green)':'var(--amber)';
+  }
+
+  // Habits
+  const habits=getHabits();
+  const done=Object.values(dd.habits||{}).filter(Boolean).length;
+  const total=habits.length;
+  document.getElementById('t-habitCount').textContent=done+'/'+total;
+  const pct=total?Math.round(done/total*100):0;
+  updateRing(pct);
+  const habitBar=document.getElementById('habitBar');
+  if(habitBar){habitBar.style.width=pct+'%';}
+
+  // Streak
+  updateStreak();
+  buildWeekStrip();
+}
+
+// ─── SLEEP ────────────────────────────────────────────────────────────────────
+function calcSleep(){
+  const bed=document.getElementById('bedtime').value;
+  const wake=document.getElementById('waketime').value;
+  if(!bed||!wake)return;
+  let[bh,bm]=bed.split(':').map(Number);
+  let[wh,wm]=wake.split(':').map(Number);
+  let mins=(wh*60+wm)-(bh*60+bm);
+  if(mins<0)mins+=1440;
+  const hrs=(mins/60).toFixed(1);
+  saveDay('sleepDuration',hrs);
+  document.getElementById('t-sleepHrs').textContent=hrs;
+}
+
+function setSQ(v,el){
+  document.querySelectorAll('.sq-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  saveDay('sleepQuality',v);
+  const qEmoji=['','😫','😴','😐','😊','🌟'];
+  document.getElementById('t-sleepQuality').textContent=qEmoji[v];
+}
+
+// ─── WATER ────────────────────────────────────────────────────────────────────
+function addWater(amt){
+  const dd=getDayData();
+  const cur=parseFloat(dd.water||0);
+  const newVal=Math.round((cur+amt)*100)/100;
+  saveDay('water',newVal);
+  document.getElementById('water').value=newVal;
+  refreshToday();
+  showToast('💧 '+newVal+' ל\'');
+}
+
+// ─── WORKOUT ──────────────────────────────────────────────────────────────────
+let _workoutType='';
+function setWorkoutType(t,el){
+  _workoutType=t;
+  document.querySelectorAll('.wt-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  saveDay('workoutType',t);
+  document.getElementById('otherTypeField').style.display=t==='other'?'block':'none';
+}
+
+function loadSleepTab(){
+  const dd=getDayData();
+  if(dd.bedtime)document.getElementById('sl-bedtime').value=dd.bedtime;
+  if(dd.waketime)document.getElementById('sl-waketime').value=dd.waketime;
+  if(dd.garminScore){
+    document.getElementById('sl-garmin').value=dd.garminScore;
+    updateGarminBadge(dd.garminScore);
+  }
+  if(dd.sleepNotes)document.getElementById('sleepNotes').value=dd.sleepNotes;
+  if(dd.sleepDuration){
+    document.getElementById('sl-hrs').textContent=dd.sleepDuration;
+  }
+  if(dd.sleepQuality){
+    document.querySelectorAll('.sq-btn').forEach((b,i)=>b.classList.toggle('active',i===dd.sleepQuality-1));
+  }
+}
+
+function updateGarminBadge(score){
+  const s=parseInt(score);
+  const badges=['gb-great','gb-good','gb-ok','gb-weak','gb-bad'];
+  const colors={
+    'gb-great':'#27a060','gb-good':'#6c5ce7','gb-ok':'#d4820a','gb-weak':'#e88c0a','gb-bad':'#e03e3e'
+  };
+  badges.forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.style.opacity='0.35';
+    el.style.transform='scale(0.95)';
+    el.style.borderColor='var(--border)';
+    el.style.background='var(--surface2)';
+  });
+  let active='';
+  if(s>=90)active='gb-great';
+  else if(s>=80)active='gb-good';
+  else if(s>=70)active='gb-ok';
+  else if(s>=60)active='gb-weak';
+  else if(s>0)active='gb-bad';
+  if(active){
+    const el=document.getElementById(active);
+    if(el){
+      el.style.opacity='1';
+      el.style.transform='scale(1.05)';
+      el.style.borderColor=colors[active];
+      el.style.background=colors[active]+'18';
+    }
+  }
+}
+
+function syncSleepFields(){
+  const bed=document.getElementById('sl-bedtime')?.value;
+  const wake=document.getElementById('sl-waketime')?.value;
+  const garmin=document.getElementById('sl-garmin')?.value;
+  // sync to today tab fields
+  if(bed&&document.getElementById('bedtime'))document.getElementById('bedtime').value=bed;
+  if(wake&&document.getElementById('waketime'))document.getElementById('waketime').value=wake;
+  if(garmin&&document.getElementById('garminScore'))document.getElementById('garminScore').value=garmin;
+  // auto-calc sleep hours
+  if(bed&&wake){
+    let[bh,bm]=bed.split(':').map(Number);
+    let[wh,wm]=wake.split(':').map(Number);
+    let mins=(wh*60+wm)-(bh*60+bm);
+    if(mins<0)mins+=1440;
+    const hrs=(mins/60).toFixed(1);
+    saveDay('sleepDuration',hrs);
+    const slHrs=document.getElementById('sl-hrs');
+    const tHrs=document.getElementById('t-sleepHrs');
+    if(slHrs)slHrs.textContent=hrs+" שע'";
+    if(tHrs)tHrs.textContent=hrs;
+  }
+  if(garmin)refreshToday();
+}
+
+function loadWorkout(){
+  const dd=getDayData();
+  if(dd.workoutType){
+    const btns=document.querySelectorAll('.wt-btn');
+    const types=['run','strength','bike','swim','other'];
+    const idx=types.indexOf(dd.workoutType);
+    if(idx>=0)btns[idx].classList.add('active');
+    _workoutType=dd.workoutType;
+    if(dd.workoutType==='other')document.getElementById('otherTypeField').style.display='block';
+  }
+  if(dd.workoutDur)document.getElementById('workoutDur').value=dd.workoutDur;
+  if(dd.workoutDist)document.getElementById('workoutDist').value=dd.workoutDist;
+  if(dd.workoutHR)document.getElementById('workoutHR').value=dd.workoutHR;
+  if(dd.workoutKcal)document.getElementById('workoutKcal').value=dd.workoutKcal;
+  if(dd.workoutNotes)document.getElementById('workoutNotes').value=dd.workoutNotes;
+  if(dd.workoutTypeOther)document.getElementById('workoutTypeOther').value=dd.workoutTypeOther;
+  if(dd.steps){document.getElementById('stepsW').value=dd.steps;updateStepsProgress(dd.steps);}
+}
+
+function syncStepsField(){
+  const v=document.getElementById('stepsW').value;
+  saveDay('steps',v);
+  document.getElementById('steps').value=v;
+  updateStepsProgress(v);
+}
+
+function updateStepsProgress(v){
+  const s=getST();const goal=parseInt(s.goalSteps||8000);
+  const pct=Math.min(100,Math.round(parseInt(v||0)/goal*100));
+  document.getElementById('stepsBar').style.width=pct+'%';
+  document.getElementById('stepsPct').textContent=pct+'%';
+  document.getElementById('stepsGoalLabel').textContent='יעד: '+goal.toLocaleString();
+}
+
+// ─── NUTRITION ────────────────────────────────────────────────────────────────
+function renderMeals(){
+  const dd=getDayData();const meals=dd.meals||[];
+  const list=document.getElementById('mealsList');
+  if(meals.length===0){
+    list.innerHTML='<div style="text-align:center;color:var(--text3);font-size:12px;padding:12px 0">אין ארוחות עדיין להיום</div>';
+    document.getElementById('nutritionTotalsCard').style.display='none';
+    document.getElementById('mealsKcalTotal').textContent='';
+    return;
+  }
+  let totKcal=0,totProt=0,totCarbs=0,totFat=0;
+  list.innerHTML=meals.map((m,i)=>{
+    totKcal+=parseInt(m.kcal||0);totProt+=parseInt(m.protein||0);
+    totCarbs+=parseInt(m.carbs||0);totFat+=parseInt(m.fat||0);
+    return`<div class="meal-card">
+      <div class="meal-header">
+        <div class="meal-name">${m.name||'ארוחה'}</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="meal-kcal">${m.kcal||0} קק"ל</div>
+          <div class="meal-delete" onclick="deleteMeal(${i})">✕</div>
+        </div>
+      </div>
+      <div class="meal-macros">
+        <span>חלבון <span>${m.protein||0}ג'</span></span>
+        <span>פחמימות <span>${m.carbs||0}ג'</span></span>
+        <span>שומן <span>${m.fat||0}ג'</span></span>
+        ${m.notes?`<span>📝 ${m.notes}</span>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('mealsKcalTotal').textContent='סה"כ: '+totKcal+' קק"ל';
+  document.getElementById('nutritionTotalsCard').style.display='block';
+  document.getElementById('n-kcal').textContent=totKcal;
+  document.getElementById('n-protein').textContent=totProt;
+  document.getElementById('n-carbs').textContent=totCarbs;
+  document.getElementById('n-fat').textContent=totFat;
+  const s=getST();const goalKcal=parseInt(s.goalKcal||2000);
+  const workoutKcal=parseInt(getDayData().workoutKcal||0);
+  const balance=totKcal-workoutKcal;
+  const balEl=document.getElementById('n-balance');
+  balEl.textContent=(balance>0?'+':'')+balance;
+  balEl.className='metric-val '+(balance>goalKcal*0.1?'red':balance<-200?'amber':'green');
+  const pct=Math.min(100,Math.round(totKcal/goalKcal*100));
+  document.getElementById('n-kcalPct').textContent=pct+'%';
+  document.getElementById('n-kcalBar').style.width=pct+'%';
+  document.getElementById('n-kcalBar').style.background=pct>110?'var(--red)':pct>90?'var(--green)':'var(--amber)';
+}
+
+function showAddMeal(){document.getElementById('addMealCard').style.display='block';['mealName','mealKcal','mealProtein','mealCarbs','mealFat','mealNotes'].forEach(id=>document.getElementById(id).value='');document.getElementById('mealPhotoPreview').style.display='none';}
+function hideAddMeal(){document.getElementById('addMealCard').style.display='none';}
+
+function addMeal(){
+  const name=document.getElementById('mealName').value.trim()||'ארוחה';
+  const kcal=document.getElementById('mealKcal').value;
+  const protein=document.getElementById('mealProtein').value;
+  const carbs=document.getElementById('mealCarbs').value;
+  const fat=document.getElementById('mealFat').value;
+  const notes=document.getElementById('mealNotes').value.trim();
+  const dd=getDayData();
+  const meals=dd.meals||[];
+  meals.push({name,kcal,protein,carbs,fat,notes,time:new Date().toLocaleTimeString('he-IL',{hour:'2-digit',minute:'2-digit'})});
+  saveDay('meals',meals);
+  hideAddMeal();
+  renderMeals();
+  refreshToday();
+  showToast('✅ ארוחה נוספה!');
+}
+
+function deleteMeal(idx){
+  const dd=getDayData();
+  const meals=dd.meals||[];
+  meals.splice(idx,1);
+  saveDay('meals',meals);
+  renderMeals();
+  refreshToday();
+}
+
+// ─── PHOTO ANALYSIS ───────────────────────────────────────────────────────────
+function handleMealPhoto(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=async e=>{
+    const preview=document.getElementById('mealPhotoPreview');
+    preview.src=e.target.result;preview.style.display='block';
+    document.getElementById('photoAnalyzing').style.display='flex';
+    try{
+      const base64=e.target.result.split(',')[1];
+      const resp=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-6',max_tokens:500,
+          messages:[{role:'user',content:[
+            {type:'image',source:{type:'base64',media_type:file.type,data:base64}},
+            {type:'text',text:'נתח את הארוחה בתמונה. ענה בעברית בפורמט JSON בלבד: {"name":"שם הארוחה","kcal":מספר,"protein":מספר,"carbs":מספר,"fat":מספר}. הערכות בגרמים לחלבון/פחמימות/שומן.'}
+          ]}]
+        })
+      });
+      const data=await resp.json();
+      const text=data.content?.[0]?.text||'{}';
+      const json=JSON.parse(text.replace(/```json|```/g,'').trim());
+      if(json.name)document.getElementById('mealName').value=json.name;
+      if(json.kcal)document.getElementById('mealKcal').value=json.kcal;
+      if(json.protein)document.getElementById('mealProtein').value=json.protein;
+      if(json.carbs)document.getElementById('mealCarbs').value=json.carbs;
+      if(json.fat)document.getElementById('mealFat').value=json.fat;
+      showToast('📸 ניתוח הצליח!');
+    }catch(err){showToast('לא הצלחתי לנתח את התמונה');}
+    document.getElementById('photoAnalyzing').style.display='none';
+  };
+  reader.readAsDataURL(file);
+}
+
+// ─── HABITS ───────────────────────────────────────────────────────────────────
+// ─── BOOKS ───────────────────────────────────────────────────────────────────
+const BK='lt_books_v1';
+const getBooks=()=>{try{return JSON.parse(localStorage.getItem(BK)||'[]')}catch{return[]}};
+const saveBooks=b=>localStorage.setItem(BK,JSON.stringify(b));
+
+function renderBooks(){
+  const books=getBooks();
+  const el=document.getElementById('booksList');
+  if(!books.length){
+    el.innerHTML='<div style="text-align:center;color:var(--text3);font-size:13px;padding:20px">אין ספרים עדיין. לחץ + הוסף</div>';
+    return;
+  }
+  const statusLabel={reading:'📖 קורא',done:'✅ סיים',queue:'⏳ ממתין'};
+  const statusColor={reading:'var(--accent)',done:'var(--green)',queue:'var(--text3)'};
+  el.innerHTML=books.map((b,i)=>{
+    const pct=b.total?Math.min(100,Math.round((b.read||0)/b.total*100)):0;
+    return`<div style="padding:12px 0;border-bottom:1px solid var(--border)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:600;color:var(--text1)">${b.name}</div>
+          ${b.author?`<div style="font-size:11px;color:var(--text3);margin-top:1px">${b.author}</div>`:''}
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-right:8px">
+          <span style="font-size:11px;color:${statusColor[b.status]||'var(--text3)'};font-weight:600">${statusLabel[b.status]||''}</span>
+          <span onclick="editBook(${i})" style="color:var(--accent);cursor:pointer;font-size:13px">✏️</span>
+          <span onclick="deleteBook(${i})" style="color:var(--red);cursor:pointer;font-size:13px">🗑️</span>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:5px">
+        <span>עמוד ${b.read||0} מתוך ${b.total||'?'}</span>
+        <span style="font-weight:600;color:var(--accent)">${pct}%</span>
+        ${b.date?`<span>${new Date(b.date).toLocaleDateString('he-IL')}</span>`:''}
+      </div>
+      <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%;background:${b.status==='done'?'var(--green)':'var(--accent)'}"></div></div>
+      ${b.notes?`<div style="font-size:11px;color:var(--text3);margin-top:6px;font-style:italic">💭 ${b.notes}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+function showBookModal(idx=-1){
+  document.getElementById('bk-editIdx').value=idx;
+  if(idx>=0){
+    const b=getBooks()[idx];
+    document.getElementById('bookModalTitle').textContent='עריכת ספר';
+    document.getElementById('bk-name').value=b.name||'';
+    document.getElementById('bk-author').value=b.author||'';
+    document.getElementById('bk-total').value=b.total||'';
+    document.getElementById('bk-read').value=b.read||'';
+    document.getElementById('bk-date').value=b.date||'';
+    document.getElementById('bk-status').value=b.status||'reading';
+    document.getElementById('bk-notes').value=b.notes||'';
+  } else {
+    document.getElementById('bookModalTitle').textContent='ספר חדש';
+    ['bk-name','bk-author','bk-total','bk-read','bk-notes'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('bk-date').value=todayKey();
+    document.getElementById('bk-status').value='reading';
+  }
+  document.getElementById('bookModal').style.display='flex';
+}
+
+function closeBookModal(){document.getElementById('bookModal').style.display='none';}
+
+function saveBook(){
+  const name=document.getElementById('bk-name').value.trim();
+  if(!name){showToast('כתוב שם לספר');return;}
+  const book={
+    name,
+    author:document.getElementById('bk-author').value.trim(),
+    total:parseInt(document.getElementById('bk-total').value)||0,
+    read:parseInt(document.getElementById('bk-read').value)||0,
+    date:document.getElementById('bk-date').value,
+    status:document.getElementById('bk-status').value,
+    notes:document.getElementById('bk-notes').value.trim(),
+  };
+  const books=getBooks();
+  const idx=parseInt(document.getElementById('bk-editIdx').value);
+  if(idx>=0)books[idx]=book;
+  else books.unshift(book);
+  saveBooks(books);
+  closeBookModal();
+  renderBooks();
+  showToast(idx>=0?'✅ ספר עודכן!':'✅ ספר נוסף!');
+}
+
+function editBook(i){showBookModal(i);}
+function deleteBook(i){
+  if(!confirm('למחוק את הספר?'))return;
+  const books=getBooks();books.splice(i,1);saveBooks(books);renderBooks();
+}
+
+function renderHabits(){
+  const habits=getHabits();const dd=getDayData();const done=dd.habits||{};
+  ['morning','day','sleep'].forEach(g=>{
+    const gh=habits.filter(h=>h.group===g);
+    const doneCount=gh.filter(h=>done[h.id]).length;
+    const el=document.getElementById('h-'+g);
+    const countEl=document.getElementById('h-'+g+'-count');
+    if(countEl)countEl.textContent=doneCount+'/'+gh.length;
+    el.innerHTML=gh.map(h=>{
+      const idx=habits.indexOf(h);
+      return`<div class="habit-item">
+        <div class="h-check ${done[h.id]?'done':''}" onclick="toggleHabit(${h.id})">
+          ${done[h.id]?'<i class="ti ti-check" style="font-size:13px"></i>':''}
+        </div>
+        <span class="h-emoji">${h.emoji}</span>
+        <span class="h-name" style="flex:1">${h.name}</span>
+        <span onclick="editHabit(${idx})" style="color:var(--text3);cursor:pointer;font-size:12px;padding:2px 4px">✏️</span>
+        <span onclick="deleteHabit(${idx})" style="color:var(--red);cursor:pointer;font-size:12px;padding:2px 4px">✕</span>
+      </div>`;
+    }).join('');
+  });
+}
+
+function toggleHabit(id){
+  const dd=getDayData();
+  if(!dd.habits)dd.habits={};
+  dd.habits[id]=!dd.habits[id];
+  saveDay('habits',dd.habits);
+  renderHabits();
+  refreshToday();
+}
+
+function showAddHabit(group='morning'){
+  document.getElementById('newHabitName').value='';
+  document.getElementById('newHabitEmoji').value='⭐';
+  document.getElementById('newHabitGroup').value=group;
+  document.getElementById('habitEditIdx').value=-1;
+  document.getElementById('addHabitModalTitle').textContent='הוסף הרגל';
+  document.getElementById('addHabitModal').style.display='flex';
+}
+function editHabit(idx){
+  const h=getHabits()[idx];
+  document.getElementById('newHabitName').value=h.name;
+  document.getElementById('newHabitEmoji').value=h.emoji;
+  document.getElementById('newHabitGroup').value=h.group;
+  document.getElementById('habitEditIdx').value=idx;
+  document.getElementById('addHabitModalTitle').textContent='ערוך הרגל';
+  document.getElementById('addHabitModal').style.display='flex';
+}
+function deleteHabit(idx){
+  if(!confirm('למחוק את ההרגל?'))return;
+  const habits=getHabits();habits.splice(idx,1);
+  localStorage.setItem(HB,JSON.stringify(habits));
+  renderHabits();refreshToday();
+}
+function addHabit(){
+  const name=document.getElementById('newHabitName').value.trim();
+  if(!name){showToast('כתוב שם להרגל');return;}
+  const emoji=document.getElementById('newHabitEmoji').value||'⭐';
+  const group=document.getElementById('newHabitGroup').value;
+  const habits=getHabits();
+  const idx=parseInt(document.getElementById('habitEditIdx').value);
+  if(idx>=0){
+    habits[idx]={...habits[idx],name,emoji,group};
+  } else {
+    habits.push({id:Date.now(),name,emoji,group});
+  }
+  localStorage.setItem(HB,JSON.stringify(habits));
+  document.getElementById('addHabitModal').style.display='none';
+  renderHabits();refreshToday();
+  showToast(idx>=0?'✅ הרגל עודכן!':'✅ הרגל נוסף!');
+}
+
+// ─── GROWTH ───────────────────────────────────────────────────────────────────
+function refreshGrowth(){
+  const s=getST();const dd=getDayData();
+  // Prayer
+  const prayer=s.prayerText||DEFAULT_PRAYER||'';
+  document.getElementById('prayerDisplay').textContent=prayer;
+  document.getElementById('prayerDisplay').style.color='var(--text2)';
+  // Goals text
+  const goalsText=s.goalsText||DEFAULT_GOALS_TEXT||'';
+  document.getElementById('goalsTextDisplay').textContent=goalsText;
+  // Summary fields
+  if(dd.gratitude)document.getElementById('gratitude').value=dd.gratitude;
+  if(dd.learned)document.getElementById('learned').value=dd.learned;
+  if(dd.achieved)document.getElementById('achieved').value=dd.achieved;
+  if(dd.thoughts)document.getElementById('thoughts').value=dd.thoughts;
+  // Goals
+  renderGoals();
+}
+
+function togglePrayerEdit(){
+  const area=document.getElementById('prayerEditArea');
+  const display=document.getElementById('prayerDisplay');
+  const isHidden=area.style.display==='none';
+  area.style.display=isHidden?'block':'none';
+  if(isHidden){
+    const s=getST();
+    document.getElementById('prayerEditText').value=s.prayerText||DEFAULT_PRAYER||'';
+    display.style.display='none';
+    document.getElementById('prayerEditBtn').textContent='✕ בטל';
+  } else {
+    display.style.display='block';
+    document.getElementById('prayerEditBtn').textContent='✏️ ערוך';
+  }
+}
+
+function savePrayerEdit(){
+  const val=document.getElementById('prayerEditText').value;
+  saveSetting('prayerText',val);
+  document.getElementById('prayerDisplay').textContent=val;
+  document.getElementById('prayerDisplay').style.display='block';
+  document.getElementById('prayerEditArea').style.display='none';
+  document.getElementById('prayerEditBtn').textContent='✏️ ערוך';
+  showToast('🙏 התפילה נשמרה!');
+}
+
+function toggleGoalsEdit(){
+  const area=document.getElementById('goalsEditArea');
+  const display=document.getElementById('goalsTextDisplay');
+  const isHidden=area.style.display==='none';
+  area.style.display=isHidden?'block':'none';
+  if(isHidden){
+    const s=getST();
+    document.getElementById('goalsEditText').value=s.goalsText||DEFAULT_GOALS_TEXT||'';
+    display.style.display='none';
+  } else {
+    display.style.display='block';
+  }
+}
+
+function saveGoalsEdit(){
+  const val=document.getElementById('goalsEditText').value;
+  saveSetting('goalsText',val);
+  document.getElementById('goalsTextDisplay').textContent=val;
+  document.getElementById('goalsTextDisplay').style.display='block';
+  document.getElementById('goalsEditArea').style.display='none';
+  showToast('🎯 המטרות נשמרו!');
+}
+
+function renderGoals(){
+  const goals=getGoals();
+  const el=document.getElementById('goalsList');
+  if(!goals.length){el.innerHTML='<div style="color:var(--text3);font-size:12px;text-align:center;padding:8px">אין מטרות עדיין</div>';return;}
+  el.innerHTML=goals.map((g,i)=>{
+    const pct=g.target?Math.min(100,Math.round((g.actual||0)/g.target*100)):0;
+    const color=pct>=80?'var(--green)':pct>=40?'var(--amber)':'var(--red)';
+    return`<div class="goal-item">
+      <div class="goal-row">
+        <div class="goal-name">${g.name}</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="goal-pct" style="color:${color}">${pct}%</div>
+          <span onclick="deleteGoal(${i})" style="color:var(--text3);cursor:pointer;font-size:13px">✕</span>
+        </div>
+      </div>
+      <div class="goal-nums">
+        <div class="goal-num"><b>${g.target||0}</b>יעד ${g.unit||''}</div>
+        <div class="goal-num" style="cursor:pointer" onclick="updateGoalActual(${i})"><b id="ga-${i}">${g.actual||0}</b>בפועל</div>
+        <div class="goal-num"><b style="color:${color}">${pct}%</b>עמידה</div>
+      </div>
+      <div class="prog-wrap"><div class="prog-fill" style="width:${pct}%;background:${color}"></div></div>
+    </div>`;
+  }).join('');
+}
+
+function showGoalModal(){document.getElementById('addGoalModal').style.display='flex';}
+function addGoal(){
+  const name=document.getElementById('newGoalName').value.trim();
+  if(!name){showToast('כתוב שם למטרה');return;}
+  const goals=getGoals();
+  goals.push({name,unit:document.getElementById('newGoalUnit').value,target:parseFloat(document.getElementById('newGoalTarget').value)||0,actual:parseFloat(document.getElementById('newGoalActual').value)||0});
+  saveGoals(goals);
+  document.getElementById('addGoalModal').style.display='none';
+  renderGoals();
+  showToast('✅ מטרה נוספה!');
+}
+
+function deleteGoal(i){const goals=getGoals();goals.splice(i,1);saveGoals(goals);renderGoals();}
+function updateGoalActual(i){
+  const goals=getGoals();
+  const val=prompt('כמה בפועל?',goals[i].actual||0);
+  if(val===null)return;
+  goals[i].actual=parseFloat(val)||0;
+  saveGoals(goals);renderGoals();
+}
+
+// ─── AI ───────────────────────────────────────────────────────────────────────
+let _charts={};
+function refreshAI(){
+  // Week stats
+  const db=getDB();const today=new Date();const dow=today.getDay();
+  let sleepSum=0,sleepN=0,wSum=0,wN=0,stepsSum=0,stepsN=0;
+  for(let i=0;i<=6;i++){
+    const d=new Date(today);d.setDate(today.getDate()-dow+i);
+    const key=d.toISOString().slice(0,10);
+    const dd=db[key]||{};
+    if(dd.sleepDuration){sleepSum+=parseFloat(dd.sleepDuration);sleepN++;}
+    if(dd.weight){wSum+=parseFloat(dd.weight);wN++;}
+    if(dd.steps){stepsSum+=parseInt(dd.steps);stepsN++;}
+  }
+  document.getElementById('weekStats').innerHTML=`
+    <div class="stat-card"><div class="stat-val">${sleepN?(sleepSum/sleepN).toFixed(1):'—'}</div><div class="stat-lbl">ממוצע שינה (שע')</div></div>
+    <div class="stat-card"><div class="stat-val">${wN?(wSum/wN).toFixed(1):'—'}</div><div class="stat-lbl">ממוצע משקל</div></div>
+    <div class="stat-card"><div class="stat-val">${stepsN?Math.round(stepsSum/stepsN).toLocaleString():'—'}</div><div class="stat-lbl">ממוצע צעדים</div></div>
+    <div class="stat-card"><div class="stat-val">${stepsN}</div><div class="stat-lbl">ימים פעילים</div></div>
+  `;
+  drawCharts();
+}
+
+function drawCharts(){
+  const db=getDB();const today=new Date();
+  const labels=[],weightData=[],stepsData=[];
+  const SHORT=['א','ב','ג','ד','ה','ו','ש'];
+  for(let i=6;i>=0;i--){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const key=d.toISOString().slice(0,10);
+    const dd=db[key]||{};
+    labels.push(SHORT[d.getDay()]);
+    weightData.push(dd.weight?parseFloat(dd.weight):null);
+    stepsData.push(dd.steps?parseInt(dd.steps):0);
+  }
+  const chartOpts={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#5c5b6b',font:{size:11}}},y:{grid:{color:'rgba(255,255,255,0.05)'},ticks:{color:'#5c5b6b',font:{size:11}}}}};
+  if(_charts.weight)_charts.weight.destroy();
+  _charts.weight=new Chart(document.getElementById('weightChart'),{type:'line',data:{labels,datasets:[{data:weightData,borderColor:'#7c6af7',backgroundColor:'rgba(124,106,247,0.1)',tension:0.4,fill:true,pointBackgroundColor:'#7c6af7',pointRadius:4,spanGaps:true}]},options:{...chartOpts}});
+  if(_charts.steps)_charts.steps.destroy();
+  _charts.steps=new Chart(document.getElementById('stepsChart'),{type:'bar',data:{labels,datasets:[{data:stepsData,backgroundColor:'rgba(52,199,123,0.5)',borderColor:'#34c77b',borderRadius:6,borderWidth:1}]},options:{...chartOpts}});
+}
+
+async function analyzeAI(type){
+  const result=document.getElementById('aiResult');
+  result.style.display='block';
+  result.innerHTML='<div class="ai-thinking"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div><span style="margin-right:6px">מנתח...</span></div>';
+  const db=getDB();const dataStr=JSON.stringify(db).slice(0,4000);
+  const prompts={
+    week:'נתח את השבוע האחרון שלי מהנתונים. כלול: שינה, תזונה, כושר, הרגלים. תן תובנות ו-3 המלצות ספציפיות.',
+    sleep:'נתח את דפוסי השינה שלי — שעות ממוצעות, ציוני גרמין, מגמות. תן המלצות לשיפור.',
+    nutrition:'נתח את התזונה שלי — קלוריות, מאקרו, מגמות. האם אני עומד ביעדים?',
+    habits:'כמה ימים עמדתי בהרגלים? אלו הרגלים חלשים? המלץ על שיפורים.',
+    fitness:'נתח את הכושר שלי — סוגי אימונים, משך, צעדים. מה אפשר לשפר?',
+  };
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:800,
+        messages:[{role:'user',content:`אתה מאמן אישי ותזונאי. ענה בעברית, קצר וישיר (עד 250 מילים). הנתונים: ${dataStr}\n\n${prompts[type]}`}]})
+    });
+    const data=await resp.json();
+    result.style.display='block';
+    result.textContent=data.content?.[0]?.text||'לא הצלחתי לנתח.';
+  }catch(e){result.textContent='שגיאה בחיבור ל-AI.';}
+}
+
+async function askFreeAI(){
+  const q=document.getElementById('aiQ').value.trim();
+  if(!q)return;
+  const result=document.getElementById('aiResult');
+  result.style.display='block';
+  result.innerHTML='<div class="ai-thinking"><div class="ai-dot"></div><div class="ai-dot"></div><div class="ai-dot"></div></div>';
+  const db=getDB();const dataStr=JSON.stringify(db).slice(0,3000);
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:600,
+        messages:[{role:'user',content:`ענה בעברית קצר וישיר. נתוני המשתמש: ${dataStr}\n\nשאלה: ${q}`}]})
+    });
+    const data=await resp.json();
+    result.textContent=data.content?.[0]?.text||'לא הצלחתי לענות.';
+  }catch(e){result.textContent='שגיאה.';}
+}
+
+// ─── SETTINGS ────────────────────────────────────────────────────────────────
+function loadSettings(){
+  const s=getST();
+  if(s.goalKcal)document.getElementById('s-goalKcal').value=s.goalKcal;
+  if(s.goalWater)document.getElementById('s-goalWater').value=s.goalWater;
+  if(s.goalSteps)document.getElementById('s-goalSteps').value=s.goalSteps;
+  if(s.goalProtein)document.getElementById('s-goalProtein').value=s.goalProtein;
+  if(s.prayerText)document.getElementById('s-prayer').value=s.prayerText;
+}
+
+// ─── BACKUP ───────────────────────────────────────────────────────────────────
+function exportData(){
+  const backup={meta:{version:4,date:new Date().toISOString(),app:'life-tracker'},
+    data:getDB(),settings:getST(),habits:getHabits(),goals:getGoals()};
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='life-tracker-'+todayKey()+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  showToast('✅ גיבוי הורד!');
+}
+
+function importData(ev){
+  const file=ev.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      let raw=e.target.result;
+      if(raw.charCodeAt(0)===0xFEFF)raw=raw.slice(1);
+      const b=JSON.parse(raw.trim());
+      if(!b.data)throw new Error('קובץ לא תקין');
+      const days=Object.keys(b.data).length;
+      if(!confirm('נמצאו '+days+' ימים. לשחזר?'))return;
+      saveDB(b.data);
+      if(b.settings)localStorage.setItem(ST,JSON.stringify(b.settings));
+      if(b.habits)localStorage.setItem(HB,JSON.stringify(b.habits));
+      if(b.goals)saveGoals(b.goals);
+      showToast('✅ שחזור הצליח!');
+      init();
+    }catch(err){showToast('❌ שגיאה: '+err.message);}
+  };
+  reader.readAsText(file,'UTF-8');
+}
+
+// ─── STREAK ───────────────────────────────────────────────────────────────────
+function updateStreak(){
+  const db=getDB();let streak=0;const today=new Date();
+  for(let i=0;i<60;i++){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const key=d.toISOString().slice(0,10);
+    const dd=db[key]||{};
+    const done=Object.values(dd.habits||{}).filter(Boolean).length;
+    if(done>0)streak++;
+    else if(i>0)break;
+  }
+  const badge=document.getElementById('streakBadge');
+  if(streak>0){badge.style.display='flex';badge.textContent='🔥 '+streak;}
+  else badge.style.display='none';
+}
+
+// ─── TOAST ────────────────────────────────────────────────────────────────────
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ─── DEFAULTS ────────────────────────────────────────────────────────────────
+const DEFAULT_PRAYER = `אבא שלי, בורא היקום כולו וכל אשר בו.
+אתה בראת את כל הדברים בעולמך והחלטת לברוא גם אותי. הדרך את צעדיי בך שאכין טוב יותר היום את אשר לא השכלתי להבין אתמול.
+אפשר לי להיות אדם טוב יותר, למשוך אנשים טובים יותר, להיות קשוב, נעים, פשוט, חבר טוב ומנהיג טוב יותר שמור שלאי וסובביי.
+אפשר לי לכבד את מלאכי טוב יותר בכל צורה שאתה רואה לנכון.
+שמור נא על אשתי וילדיי כי הם הדבר הכי חשוב לי בעולם. אפשר להם להיות מאושרים ומלאי משמעות. אפשר להם לצמוד בדרך הטוב ולא להיגרר לעולם השקר הנוגל. אפשר לנו להיות משפחה בריאה ומלוכדת שמדברת על הכל ומכבדת אחד את השני. אפשר לנו ליהנות מלאים, לגיל ולצבור חוויות. אפשר לנו פרנסה קלה ובשפע על אנות שנוכל להתקיים בצורה מכובדת וללא היצקות לאחרים וכך נוכל לתרום אשפר ועוד יותר.
+אפשר לי ליהנות מהבריאה האיחובת שלך מי מוזיקה נשיאה, מאכלים בריאים, כושר אנופני, ספרים טובים, תרבות, שיחות עמוקות והעצברות הרוחניות.
+אני אוהב לך אלוהא יקר על כל מה שהמנקת לי בחיי: עיניים לראות, אוזניים לשמוע, פה לדבר, גוף בריא וללא אחלנות, שכל בריא, שאמביציה ולב שגדל לאהוב אותך כל יום אחרש.`;
+
+const DEFAULT_GOALS_TEXT = `המטרות והיעדים שלי 2026
+לחיות חיים בריאים ומשמעותיים, תוך הגנה עמוקה של התהליכים שאני מבצע ותוך הכרת הטוב והכרה לגבור שלום כל יום אחרש
+
+01 | אורח חיים בריא: כושר גופני ותזונה
+• הקפדה על שלמת אימונים שבועיים (אירובי וכוח)
+• הקפדה על לאכול קלורי (חישוב ומעקב על המסה)
+• ריצה לאמרון לנפיה בדצמבר 26
+• להתמכר על היכולות לרכיבה ושחיה לאורך השנה
+
+02 | רכז למשמעותי ולחווייתי
+• לוודא שכל התכנינים בלשכבה בואמה הם מצדותיים
+• ניצור קהילה למשמעות ב-י-ב׳
+• ניצר דרך עבור הצוות והתכנינים ושלשה השרוה
+
+03 | גדול הלובוסטים
+• ניצור חרגות של מנהיגות לצעירה ולאחריות
+• להרחיב על המשל ההסכפה של גדול הלובוסטים
+
+04 | מטלכי הוראה בהיסטוריה
+• להיות מורה אנלושי ומקצועי לוהיסטוריה
+• פיאות סקרנות בקרב התלמידים
+• קיום מלמה אחנות שלבניים
+
+05 | משפחה ודאגיות
+• טיסה לחוץ לארץ עם המשפחה
+• צלון אינות ילדים לפחות אחת לחודש
+• דיות לעם אוסרי לפחות אחת לחודש
+
+06 | כלכלי
+• שלום אחרון לדירה (150 אש"ח)
+• ניהול תקציב שני ולמירה כו
+• תוש ונסה לממא
+• ללמוד לארנות השקלנות בשוק ההון
+
+07 | הגנרביות
+• מינלוניים - ביצוא ילני מינלוניים כניס
+• למאציא ולצלי הגנרביות ונוסף
+
+08 | רוחני
+• המלאקה בפתולמות הנפש והקבנה ביולי שלבר
+• צלון להתרבודרות לפחות אחת לשלבנות
+
+09 | התפתחות אישית
+• לקרוא 10 ספרים לפי הרשילה ולסכם אלרם
+• סיכום יולי בלמחברת
+
+10 | תחביבים
+• קטרנול - לפחות אחת לשבוע
+• שלמט - אלטרפרים יולניים + מלשתקים
+• נגינה על גיטרה - ללמור ולנגן`;
+
+// ─── CALENDAR ────────────────────────────────────────────────────────────────
+let _calYear = new Date().getFullYear();
+let _calMonth = new Date().getMonth();
+let _calWeekOffset = 0;
+let _calView = 'year';
+
+function setCalView(view, el){
+  _calView = view;
+  document.querySelectorAll('.cal-view-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('cal-year').style.display = view==='year'?'block':'none';
+  document.getElementById('cal-month').style.display = view==='month'?'block':'none';
+  document.getElementById('cal-week').style.display = view==='week'?'block':'none';
+  renderCalendar();
+}
+
+function renderCalendar(){
+  renderStreak();
+  if(_calView==='year') renderYearView();
+  else if(_calView==='month') renderMonthView();
+  else renderWeekView();
+}
+
+function dayColor(key){
+  const db=getDB(); const habits=getHabits();
+  const dd=db[key]||{};
+  const done=Object.values(dd.habits||{}).filter(Boolean).length;
+  const total=habits.length;
+  if(!total)return'empty';
+  if(done===total)return'done';
+  if(done>0)return'partial';
+  return'empty';
+}
+
+function renderYearView(){
+  const db=getDB();
+  document.getElementById('cal-year-title').textContent=_calYear;
+  const grid=document.getElementById('yearGrid');
+  const MONTHS=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  const today=new Date();
+  grid.innerHTML=MONTHS.map((mName,mi)=>{
+    const daysInMonth=new Date(_calYear,mi+1,0).getDate();
+    const firstDow=new Date(_calYear,mi,1).getDay();
+    let cells='';
+    for(let i=0;i<firstDow;i++)cells+='<div class="mini-day"></div>';
+    for(let d=1;d<=daysInMonth;d++){
+      const key=`${_calYear}-${String(mi+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const isToday=today.getFullYear()===_calYear&&today.getMonth()===mi&&today.getDate()===d;
+      const isFuture=new Date(key)>today;
+      const cls=isFuture?'':'mini-day '+dayColor(key)+(isToday?' today':'');
+      cells+=`<div class="${cls||'mini-day'}" style="${isFuture?'opacity:0.2':''}" onclick="${isFuture?'void(0)':'showDayDetail(\'' +key+ '\')'}"></div>`;
+    }
+    return`<div class="mini-month" onclick="goToMonth(${mi})">
+      <div class="mini-month-title">${mName}</div>
+      <div class="mini-grid">${cells}</div>
+    </div>`;
+  }).join('');
+}
+
+function goToMonth(mi){
+  _calMonth=mi;
+  setCalView('month',document.getElementById('cvb-month'));
+}
+
+function shiftYear(d){_calYear+=d;renderYearView();}
+
+function renderMonthView(){
+  const MONTHS=['ינואר','פברואר','מרץ','אפריל','מאי','יוני','יולי','אוגוסט','ספטמבר','אוקטובר','נובמבר','דצמבר'];
+  document.getElementById('cal-month-title').textContent=MONTHS[_calMonth]+' '+_calYear;
+  const grid=document.getElementById('monthGrid');
+  const today=new Date();
+  const daysInMonth=new Date(_calYear,_calMonth+1,0).getDate();
+  const firstDow=new Date(_calYear,_calMonth,1).getDay();
+  let cells='';
+  for(let i=0;i<firstDow;i++)cells+='<div></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const key=`${_calYear}-${String(_calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday=today.getFullYear()===_calYear&&today.getMonth()===_calMonth&&today.getDate()===d;
+    const isFuture=new Date(key)>today;
+    const color=dayColor(key);
+    const onclk=isFuture?'':'showDayDetail(\"'+key+'\")';
+    cells+=`<div class="cal-day ${isFuture?'future':color}${isToday?' today':''}"
+      onclick="${onclk}" title="${key}">${d}</div>`;
+  }
+  grid.innerHTML=cells;
+}
+
+function shiftMonth(d){
+  _calMonth+=d;
+  if(_calMonth>11){_calMonth=0;_calYear++;}
+  if(_calMonth<0){_calMonth=11;_calYear--;}
+  renderMonthView();
+}
+
+function renderWeekView(){
+  const SHORT=["א'","ב'","ג'","ד'","ה'","ו'","ש'"];
+  const FULL=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  const today=new Date();
+  const dow=today.getDay();
+  const weekStart=new Date(today);
+  weekStart.setDate(today.getDate()-dow+(_calWeekOffset*7));
+  const weekEnd=new Date(weekStart);weekEnd.setDate(weekStart.getDate()+6);
+  document.getElementById('cal-week-title').textContent=
+    weekStart.toLocaleDateString('he-IL',{day:'numeric',month:'short'})+' — '+
+    weekEnd.toLocaleDateString('he-IL',{day:'numeric',month:'short',year:'numeric'});
+  const db=getDB();const habits=getHabits();
+  let html='';
+  for(let i=0;i<=6;i++){
+    const d=new Date(weekStart);d.setDate(weekStart.getDate()+i);
+    const key=d.toISOString().slice(0,10);
+    const isToday=key===todayKey();
+    const isFuture=d>today&&!isToday;
+    const dd=db[key]||{};
+    const doneH=Object.values(dd.habits||{}).filter(Boolean).length;
+    const totalH=habits.length;
+    const color=dayColor(key);
+    const colorMap={done:'var(--green)',partial:'var(--amber)',empty:'var(--text3)'};
+    const wOnclk=isFuture?'':'showDayDetail(\"'+key+'\")';
+    html+=`<div class="week-day-row" style="${isToday?'background:rgba(108,92,231,0.05);border-radius:8px;':''}" onclick="${wOnclk}">
+      <div class="week-day-label" style="color:${isToday?'var(--accent)':'var(--text2)'}">
+        <div style="font-size:10px">${SHORT[d.getDay()]}</div>
+        <div style="font-size:16px;font-weight:800">${d.getDate()}</div>
+      </div>
+      <div class="week-day-data">
+        ${isFuture?'<span style="font-size:11px;color:var(--text3)">—</span>':`
+        <span class="week-chip" style="background:${colorMap[color]}22;color:${colorMap[color]}">✅ ${doneH}/${totalH}</span>
+        ${dd.sleepDuration?`<span class="week-chip" style="background:rgba(108,92,231,0.1);color:var(--accent)">😴 ${dd.sleepDuration}שע'</span>`:''}
+        ${dd.steps?`<span class="week-chip" style="background:rgba(39,160,96,0.1);color:var(--green)">👟 ${parseInt(dd.steps).toLocaleString()}</span>`:''}
+        ${dd.weight?`<span class="week-chip" style="background:rgba(212,130,10,0.1);color:var(--amber)">⚖️ ${dd.weight}ק"ג</span>`:''}
+        ${dd.workoutDur?`<span class="week-chip" style="background:rgba(224,62,62,0.1);color:var(--red)">💪 ${dd.workoutDur}דק'</span>`:''}
+        `}
+      </div>
+    </div>`;
+  }
+  document.getElementById('weekCalGrid').innerHTML=html;
+}
+
+function shiftWeekCal(d){_calWeekOffset+=d;renderWeekView();}
+
+function showDayDetail(key){
+  const db=getDB();const dd=db[key]||{};const habits=getHabits();
+  const dateStr=new Date(key+'T12:00').toLocaleDateString('he-IL',{weekday:'long',day:'numeric',month:'long'});
+  document.getElementById('dayDetailTitle').textContent=dateStr;
+  const doneH=habits.filter(h=>dd.habits&&dd.habits[h.id]);
+  const meals=dd.meals||[];
+  const totKcal=meals.reduce((a,m)=>a+(parseInt(m.kcal)||0),0);
+  document.getElementById('dayDetailContent').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px">
+      <div class="metric"><div class="metric-val">${dd.sleepDuration||'—'}</div><div class="metric-label">שעות שינה</div></div>
+      <div class="metric"><div class="metric-val">${dd.garminScore||'—'}</div><div class="metric-label">ציון גרמין</div></div>
+      <div class="metric"><div class="metric-val green">${dd.steps?parseInt(dd.steps).toLocaleString():'—'}</div><div class="metric-label">צעדים</div></div>
+      <div class="metric"><div class="metric-val">${dd.water||'—'}</div><div class="metric-label">מים ל'</div></div>
+      <div class="metric"><div class="metric-val amber">${totKcal||'—'}</div><div class="metric-label">קלוריות</div></div>
+      <div class="metric"><div class="metric-val">${dd.weight||'—'}</div><div class="metric-label">משקל</div></div>
+    </div>
+    ${doneH.length?`<div style="margin-bottom:10px">
+      <div style="font-size:11px;color:var(--text3);margin-bottom:6px">הרגלים שבוצעו (${doneH.length}/${habits.length})</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px">
+        ${doneH.map(h=>`<span style="background:rgba(108,92,231,0.1);color:var(--accent);padding:3px 8px;border-radius:20px;font-size:11px">${h.emoji} ${h.name}</span>`).join('')}
+      </div>
+    </div>`:''}
+    ${dd.gratitude?`<div style="margin-top:8px"><div style="font-size:11px;color:var(--text3)">🙏 הכרת תודה</div><div style="font-size:13px;color:var(--text2);margin-top:3px">${dd.gratitude}</div></div>`:''}
+    ${dd.learned?`<div style="margin-top:8px"><div style="font-size:11px;color:var(--text3)">💡 מה למדתי</div><div style="font-size:13px;color:var(--text2);margin-top:3px">${dd.learned}</div></div>`:''}
+  `;
+  document.getElementById('dayDetailCard').style.display='block';
+  document.getElementById('dayDetailCard').scrollIntoView({behavior:'smooth'});
+}
+
+function renderStreak(){
+  const db=getDB();const today=new Date();
+  let streak=0;const dots=[];
+  for(let i=0;i<60;i++){
+    const d=new Date(today);d.setDate(today.getDate()-i);
+    const key=d.toISOString().slice(0,10);
+    const done=Object.values((db[key]||{}).habits||{}).filter(Boolean).length;
+    if(done>0){streak++;dots.push({key,done,color:'var(--green)'});}
+    else if(i>0&&streak>0){dots.push({key,done:0,color:'var(--border2)'});if(i>streak+3)break;}
+    else dots.push({key,done:0,color:'var(--border2)'});
+  }
+  document.getElementById('streakCount').textContent=streak;
+  const msgs=['התחל היום! 💪','יום ראשון — המסע מתחיל! 🌱','יומיים ברצף! 🔥','3 ימים! ממשיך כך! ⚡','שבוע שלם! מדהים! 🎯','שבועיים ברצף! גיבור! 🏆','חודש שלם! אגדה! 🌟'];
+  document.getElementById('streakMsg').textContent=streak>=30?msgs[6]:streak>=14?msgs[5]:streak>=7?msgs[4]:streak>=3?msgs[3]:streak>=2?msgs[2]:streak>=1?msgs[1]:msgs[0];
+  // Last 30 days dots
+  const dotsEl=document.getElementById('streakDots');
+  dotsEl.innerHTML=dots.slice(0,30).reverse().map(d=>`
+    <div class="streak-dot" style="background:${d.done>0?'var(--green)':'var(--surface3)'};border-radius:3px" title="${d.key}"></div>
+  `).join('');
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+function init(){
+  const days=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
+  const now=new Date();
+  document.getElementById('headerDate').textContent='יום '+days[now.getDay()]+', '+now.toLocaleDateString('he-IL');
+  // שמור תפילה ומטרות ברירת מחדל אם לא קיימות
+  const s=getST();
+  if(!s.prayerText){
+    s.prayerText=DEFAULT_PRAYER;
+    localStorage.setItem(ST,JSON.stringify(s));
+  }
+  // תמיד שמור את ברירת המחדל אם עדיין לא נערך ידנית
+  if(!s.goalsText){
+    s.goalsText=DEFAULT_GOALS_TEXT;
+    localStorage.setItem(ST,JSON.stringify(s));
+  }
+  buildWeekStrip();
+  loadDay(todayKey());
+  refreshToday();
+}
+init();
+</script>
+</body>
+</html>
