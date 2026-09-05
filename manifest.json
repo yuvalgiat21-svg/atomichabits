@@ -1,0 +1,20 @@
+{
+  "name": "יומן חיים",
+  "short_name": "יומן חיים",
+  "description": "מעקב יומי אישי",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5f4f0",
+  "theme_color": "#6c5ce7",
+  "orientation": "portrait",
+  "lang": "he",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='112' fill='%236c5ce7'/><text y='.85em' font-size='360' x='50%' text-anchor='middle'>🌱</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
