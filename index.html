@@ -662,8 +662,14 @@ textarea{resize:none;min-height:64px;line-height:1.5}
       </div>
       <div id="prayerDisplay" style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap;max-height:220px;overflow-y:auto;padding:4px 2px;scrollbar-width:thin"></div>
       <div id="prayerEditArea" style="display:none;margin-top:8px">
-        <textarea id="prayerEditText" style="width:100%;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:10px;color:var(--text1);font-size:13px;font-family:inherit;resize:none;min-height:200px;direction:rtl;line-height:1.7"></textarea>
-        <button class="btn btn-primary" style="margin-top:8px" onclick="savePrayerEdit()"><i class="ti ti-check"></i> שמור תפילה</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:12px;color:var(--text3)">ערוך את תפילתך</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-secondary" style="padding:6px 14px;font-size:12px" onclick="togglePrayerEdit()"><i class="ti ti-x"></i> בטל</button>
+            <button class="btn btn-primary" style="padding:6px 14px;font-size:12px" onclick="savePrayerEdit()"><i class="ti ti-check"></i> שמור</button>
+          </div>
+        </div>
+        <textarea id="prayerEditText" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px;color:var(--text1);font-size:13px;font-family:inherit;resize:vertical;min-height:250px;max-height:60vh;direction:rtl;line-height:1.8;overflow-y:auto;-webkit-overflow-scrolling:touch"></textarea>
       </div>
     </div>
 
@@ -673,10 +679,16 @@ textarea{resize:none;min-height:64px;line-height:1.5}
         <div class="card-title"><i class="ti ti-target"></i> המטרות שלי 2026</div>
         <span onclick="toggleGoalsEdit()" style="font-size:12px;color:var(--accent);cursor:pointer">✏️ ערוך</span>
       </div>
-      <div id="goalsTextDisplay" style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap;max-height:280px;overflow-y:auto;padding:4px 2px;scrollbar-width:thin"></div>
+      <div id="goalsTextDisplay" style="font-size:13px;color:var(--text2);line-height:1.9;white-space:pre-wrap;max-height:260px;overflow-y:auto;padding:4px 2px;scrollbar-width:thin"></div>
       <div id="goalsEditArea" style="display:none;margin-top:8px">
-        <textarea id="goalsEditText" style="width:100%;background:var(--surface2);border:0.5px solid var(--border2);border-radius:var(--radius-sm);padding:10px;color:var(--text1);font-size:13px;font-family:inherit;resize:none;min-height:300px;direction:rtl;line-height:1.7"></textarea>
-        <button class="btn btn-primary" style="margin-top:8px" onclick="saveGoalsEdit()"><i class="ti ti-check"></i> שמור מטרות</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <span style="font-size:12px;color:var(--text3)">ערוך את המטרות שלך</span>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-secondary" style="padding:6px 14px;font-size:12px" onclick="toggleGoalsEdit()"><i class="ti ti-x"></i> בטל</button>
+            <button class="btn btn-primary" style="padding:6px 14px;font-size:12px" onclick="saveGoalsEdit()"><i class="ti ti-check"></i> שמור</button>
+          </div>
+        </div>
+        <textarea id="goalsEditText" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:10px;color:var(--text1);font-size:13px;font-family:inherit;resize:vertical;min-height:400px;max-height:60vh;direction:rtl;line-height:1.8;overflow-y:auto;-webkit-overflow-scrolling:touch"></textarea>
       </div>
     </div>
 
@@ -1592,14 +1604,18 @@ function savePrayerEdit(){
 function toggleGoalsEdit(){
   const area=document.getElementById('goalsEditArea');
   const display=document.getElementById('goalsTextDisplay');
+  const btn=document.querySelector('[onclick="toggleGoalsEdit()"]');
   const isHidden=area.style.display==='none';
-  area.style.display=isHidden?'block':'none';
   if(isHidden){
     const s=getST();
     document.getElementById('goalsEditText').value=s.goalsText||DEFAULT_GOALS_TEXT||'';
+    area.style.display='block';
     display.style.display='none';
+    if(btn)btn.textContent='✕ סגור';
   } else {
+    area.style.display='none';
     display.style.display='block';
+    if(btn)btn.textContent='✏️ ערוך';
   }
 }
 
@@ -1837,7 +1853,7 @@ const DEFAULT_GOALS_TEXT = `המטרות והיעדים שלי 2026
 • להרחיב על המשל ההסכפה של גדול הלובוסטים
 
 04 | מטלכי הוראה בהיסטוריה
-• להיות מורה אנלושי ומקצועי לוהיסטוריה
+• להיות מורה אנלושי ומקצועי בהיסטוריה
 • פיאות סקרנות בקרב התלמידים
 • קיום מלמה אחנות שלבניים
 
