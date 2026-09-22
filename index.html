@@ -466,7 +466,8 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
       <button class="modal-close" onclick="closeModal('habitOverlay')">✕</button>
     </div>
     <div class="field"><label>שם</label><input type="text" id="hm-name" placeholder="שם ההרגל"></div>
-    <div class="field"><label>אמוג'י</label><input type="text" id="hm-emoji" placeholder="🌟" style="max-width:80px"></div>
+    <div class="field"><label>אמוג'י</label><input type="text" id="hm-emoji" placeholder="🌟" style="max-width:70px;font-size:22px;text-align:center" readonly onclick="document.getElementById('emojiPicker').style.display=document.getElementById('emojiPicker').style.display==='none'?'flex':'none'"></div>
+    <div id="emojiPicker" style="display:none;flex-wrap:wrap;gap:6px;padding:8px;background:var(--card2);border-radius:var(--r2);margin-top:-8px;margin-bottom:8px"><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">⭐</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🌟</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">💪</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🏃</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">😴</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">💧</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🥗</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">📚</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🧘</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🙏</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">💊</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🎯</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🚴</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🏊</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">💤</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🌅</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">☀️</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🌙</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🎵</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">✍️</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🧠</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">❤️</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🔥</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">⚡</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🌱</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🍎</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">☕</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🥤</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🫁</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🧘‍♂️</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🏋️</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🚶</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🎨</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">📝</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🤸</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🌍</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">💰</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🎸</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🛌</span><span style="font-size:26px;cursor:pointer;padding:3px" onclick="document.getElementById('hm-emoji').value=this.textContent;document.getElementById('emojiPicker').style.display='none'">🦷</span></div>
     <div class="field"><label>קבוצה</label>
       <select id="hm-group">
         <option value="morning">🌅 בוקר</option>
@@ -1256,7 +1257,48 @@ function toast(msg){
 }
 
 // ===== INIT =====
+function migrateOldData(){
+  // Try common old keys that previous versions used
+  var OLD_HABIT_KEYS=['habits','yj_habits','atomicHabits','life_habits','habits_v1'];
+  var current=hbGet();
+  if(current.length>0)return; // already have data
+  for(var i=0;i<OLD_HABIT_KEYS.length;i++){
+    try{
+      var old=JSON.parse(localStorage.getItem(OLD_HABIT_KEYS[i])||'[]');
+      if(old&&old.length>0){
+        // Normalize format
+        var normalized=old.map(function(h,idx){
+          return {
+            id:h.id||String(Date.now()+idx),
+            name:h.name||h.title||h.text||'הרגל '+idx,
+            emoji:h.emoji||h.icon||'⭐',
+            group:h.group||h.category||h.time||'morning'
+          };
+        });
+        hbSet(normalized);
+        console.log('Migrated '+normalized.length+' habits from '+OLD_HABIT_KEYS[i]);
+        return;
+      }
+    }catch(e){}
+  }
+  // Also try to migrate old days data
+  var OLD_DAY_KEYS=['days','yj_days','life_days','days_v1'];
+  var currentDays=dbGet();
+  if(Object.keys(currentDays).length>0)return;
+  for(var j=0;j<OLD_DAY_KEYS.length;j++){
+    try{
+      var oldDays=JSON.parse(localStorage.getItem(OLD_DAY_KEYS[j])||'{}');
+      if(oldDays&&Object.keys(oldDays).length>0){
+        dbSet(oldDays);
+        console.log('Migrated days from '+OLD_DAY_KEYS[j]);
+        return;
+      }
+    }catch(e){}
+  }
+}
+
 function init(){
+  migrateOldData();
   var DAYNAMES=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
   var now=new Date();
   document.getElementById('hdrDate').textContent='יום '+DAYNAMES[now.getDay()]+', '+now.toLocaleDateString('he-IL');
