@@ -147,6 +147,67 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 .sq-btn{flex:1;padding:8px 2px;border:1px solid var(--border);border-radius:var(--r2);background:var(--card2);cursor:pointer;text-align:center;font-size:10px;color:var(--t2);transition:all .15s}
 .sq-btn.on{border-color:var(--accent);background:rgba(108,92,231,0.1);color:var(--accent)}
 </style>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyBvkS6EE_wmBc8r1wMfYi-RNG_C4I_EaWU",
+      authDomain: "atomichabits-df13b.firebaseapp.com",
+      projectId: "atomichabits-df13b",
+      storageBucket: "atomichabits-df13b.firebasestorage.app",
+      messagingSenderId: "76966392649",
+      appId: "1:76966392649:web:6e1f4a21ca3c21900ca098"
+    };
+    firebase.initializeApp(firebaseConfig);
+    var db = firebase.firestore();
+    var USER_ID = 'yuval';
+
+    // ===== CLOUD SYNC =====
+    var syncTimer = null;
+    function scheduleSync(){
+      clearTimeout(syncTimer);
+      syncTimer = setTimeout(pushToCloud, 1500);
+    }
+
+    function pushToCloud(){
+      var data = {
+        days: dbGet(),
+        settings: stGet(),
+        habits: hbGet(),
+        books: bkGet(),
+        updated: new Date().toISOString()
+      };
+      db.collection('users').doc(USER_ID).set(data)
+        .then(function(){ showSyncStatus('☁️ נשמר'); })
+        .catch(function(e){ showSyncStatus('⚠️ שגיאת שמירה'); console.error(e); });
+    }
+
+    function pullFromCloud(callback){
+      db.collection('users').doc(USER_ID).get()
+        .then(function(doc){
+          if(doc.exists){
+            var data = doc.data();
+            if(data.days) dbSet(data.days);
+            if(data.settings) stSet(data.settings);
+            if(data.habits) hbSet(data.habits);
+            if(data.books) bkSet(data.books);
+            showSyncStatus('✅ סונכרן');
+          }
+          if(callback) callback();
+        })
+        .catch(function(e){
+          showSyncStatus('📴 עובד במצב לא מקוון');
+          if(callback) callback();
+        });
+    }
+
+    function showSyncStatus(msg){
+      var el = document.getElementById('syncStatus');
+      if(el){ el.textContent = msg; setTimeout(function(){ el.textContent = ''; }, 3000); }
+    }
+  </script>
 </head>
 <body>
 <div class="app">
@@ -155,6 +216,7 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   <div>
     <div class="hdr-title">יומן חיים</div>
     <div class="hdr-date" id="hdrDate"></div>
+    <div id="syncStatus" style="font-size:10px;color:var(--t3);margin-top:2px"></div>
   </div>
   <div style="display:flex;align-items:center;gap:8px">
   <button id="desktopToggle" onclick="toggleDesktop()" style="background:var(--card2);border:1px solid var(--border);border-radius:20px;padding:5px 12px;font-size:12px;cursor:pointer;color:var(--t2);font-family:inherit;display:flex;align-items:center;gap:5px"><span id="desktopIcon">🖥️</span><span id="desktopLabel">מחשב</span></button>
@@ -539,13 +601,13 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 // ===== STORAGE =====
 var DB='yj_days_v2', ST='yj_settings_v2', HB='yj_habits_v2', BK='yj_books_v2';
 function dbGet(){try{return JSON.parse(localStorage.getItem(DB)||'{}')}catch{return{}}}
-function dbSet(d){localStorage.setItem(DB,JSON.stringify(d))}
+function dbSet(d){localStorage.setItem(DB,JSON.stringify(d));if(typeof scheduleSync!=="undefined")scheduleSync();}
 function stGet(){try{return JSON.parse(localStorage.getItem(ST)||'{}')}catch{return{}}}
-function stSet(s){localStorage.setItem(ST,JSON.stringify(s))}
+function stSet(s){localStorage.setItem(ST,JSON.stringify(s));if(typeof scheduleSync!=="undefined")scheduleSync();}
 function hbGet(){try{return JSON.parse(localStorage.getItem(HB)||'[]')}catch{return[]}}
-function hbSet(h){localStorage.setItem(HB,JSON.stringify(h))}
+function hbSet(h){localStorage.setItem(HB,JSON.stringify(h));if(typeof scheduleSync!=="undefined")scheduleSync();}
 function bkGet(){try{return JSON.parse(localStorage.getItem(BK)||'[]')}catch{return[]}}
-function bkSet(b){localStorage.setItem(BK,JSON.stringify(b))}
+function bkSet(b){localStorage.setItem(BK,JSON.stringify(b));if(typeof scheduleSync!=="undefined")scheduleSync();}
 
 var viewKey=todayKey(), weekOffset=0;
 
@@ -1346,6 +1408,11 @@ function pickEmoji(e){
 function init(){
   applyViewMode();
   migrateOldData();
+  if(typeof pullFromCloud!=="undefined"){
+    showSyncStatus("⏳ מסנכרן...");
+    pullFromCloud(function(){ loadToday(); });
+    return;
+  }
   var DAYNAMES=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
   var now=new Date();
   document.getElementById('hdrDate').textContent='יום '+DAYNAMES[now.getDay()]+', '+now.toLocaleDateString('he-IL');
