@@ -1026,7 +1026,7 @@ function renderCalMonth(){
     var isFuture=k>today;
     var isToday=k===today;
     var cls='cal-day'+(isFuture?' future':' '+dayStatus(k))+(isToday?' today':'');
-    cells+='<div class="'+cls+'" '+(isFuture?'':'onclick="showDay(\''+k+\')"')+'>'+d+'</div>';
+    var el2=document.createElement('div');el2.className=cls;el2.textContent=d;if(!isFuture){el2.setAttribute('data-key',k);el2.onclick=function(){showDay(this.getAttribute('data-key'));}}cells+=el2.outerHTML;
   }
   document.getElementById('monthGrid').innerHTML=cells;
 }
