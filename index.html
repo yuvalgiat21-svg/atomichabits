@@ -1410,7 +1410,19 @@ function init(){
   migrateOldData();
   if(typeof pullFromCloud!=="undefined"){
     showSyncStatus("⏳ מסנכרן...");
-    pullFromCloud(function(){ loadToday(); });
+    // Wait for Firebase to be fully ready
+    var attempts=0;
+    function tryPull(){
+      attempts++;
+      if(typeof db!=="undefined" && db){
+        pullFromCloud(function(){ loadToday(); });
+      } else if(attempts<20){
+        setTimeout(tryPull,200);
+      } else {
+        loadToday();
+      }
+    }
+    tryPull();
     return;
   }
   var DAYNAMES=['ראשון','שני','שלישי','רביעי','חמישי','שישי','שבת'];
